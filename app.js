@@ -22,7 +22,8 @@ function checkAdminSecret(req) {
 }
 
 function checkAPIKey(req) {
-    if(req.headers.authorization === "undefined") return false;
+    if (req.headers === "undefined") return false;
+    if (req.headers.authorization === "undefined") return false;
     if (req.headers.authorization.startsWith("Apikey")) {
         let both = req.headers.authorization.substr(7)
         let indexDelim = both.indexOf(":")

@@ -33,7 +33,6 @@ async function checkAPIKey(req) {
             return (typeof actualToken !== "undefined" && actualToken === presentedToken);
         }
     } catch (e) {
-        console.log(e)
     }
     return false;
 }
@@ -128,6 +127,8 @@ async function patchUserBySus(req, res) {
     } catch (err) {
         return res.json({code: 400, method: "patchUserBySus", error: "Probably an unknown sus?"})
     }
+
+    console.log("User "+req.params.sus+"'s Balance changed by "+delta);
     return res.json({code: 200, method: "patchUserBySus"})
 }
 
@@ -157,6 +158,7 @@ async function postUser(req, res) {
                 res.json({code: 400, method: "postUser", error: "Probably an existing sus?"})
             } else {
                 redisClient.hSet("user:" + req.body.sus, "name", req.body.name, {NX: true});
+                console.log("Added user "+req.body.sus+" with Name "+req.body.name+" and Balance "+req.body.balance);
                 return res.json({code: 200, method: "postUser"})
             }
         })
@@ -182,6 +184,7 @@ async function postApp(req, res) {
     await redisClient.HSET("app:" + req.body.appId, {
         apiToken: req.body.apiToken, name: req.body.name
     }, {NX: true}).then(() => {
+        console.log("Added app "+req.body.appId+" with Name "+req.body.name+" and Token "+req.body.apiToken);
         return res.json({code: 200, method: "postApp"})
     }).catch(() => {
         return res.json({code: 400, method: "postApp", error: "appId already in use"})
@@ -203,6 +206,7 @@ async function deleteUserBySus(req, res) {
         if (value <= 0) {
             return res.json({code: 400, method: "deleteUserBySus", error: "unknown sus?"})
         } else {
+            console.log("Deleted user "+req.params.sus);
             redisClient.zRem("balance", "user:" + req.params.sus);
             return res.json({code: 200, method: "deleteUserBySus"})
         }
@@ -220,6 +224,7 @@ async function deleteAppByAppId(req, res) {
         if (value <= 0) {
             return res.json({code: 400, method: "deleteAppByAppId", error: "unknown appId?"})
         } else {
+            console.log("Deleted app "+req.params.appid);
             return res.json({code: 200, method: "deleteAppByAppId"})
         }
     });

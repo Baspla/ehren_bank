@@ -12,7 +12,7 @@ jobs:
   
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Using Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: 16.x
@@ -22,11 +22,11 @@ jobs:
           npm run build --if-present
     - name: Docker Login
       env:
-        DOCKER_USER: ${{secrets.DOCKER_USER}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        DOCKER_USER: ${{ github.actor }}
+        DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Docker Build
-      run: docker build . --file Dockerfile --tag baspla/ehren_bank:latest
+      run: docker build . --file Dockerfile --tag dockerShare/ehren_bank:latest
     - name: Docker Push
-      run: docker push ${{secrets.DOCKER_USER}}/ehren_bank
+      run: docker push dockerShare/ehren_bank

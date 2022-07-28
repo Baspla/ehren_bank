@@ -30,8 +30,6 @@ async function checkAPIKey(req) {
             let presentedToken = both.substr(indexDelim + 1);
             if (indexDelim < 0) return false;
             let actualToken = await redisClient.hGet("app:" + appId, "apiToken");
-            console.log(actualToken)
-            console.log(presentedToken)
             return (typeof actualToken !== "undefined" && actualToken === presentedToken);
         }
     } catch (e) {
@@ -55,7 +53,7 @@ async function getUserBySus(req, res) {
     let name = await redisClient.hGet("user:" + req.params.sus, "name");
 
     if(name===null||balance===null){
-        return res.json({code: 404, method: "getUserBySus", error:"Sus not found"})
+        return res.json({code: 404, method: "getUserBySus", error:"User not found"})
     }
     // RESPONSE
     return res.json({code: 200, method: "getUserBySus", response: {name: name, balance: balance}})

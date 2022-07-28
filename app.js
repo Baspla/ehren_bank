@@ -22,17 +22,17 @@ function checkAdminSecret(req) {
 }
 
 function checkAPIKey(req) {
-    if (req.headers === "undefined") return false;
-    if (req.headers.authorization === "undefined") return false;
-    if (req.headers.authorization.startsWith("Apikey")) {
-        let both = req.headers.authorization.substr(7)
-        let indexDelim = both.indexOf(":")
-        let appId = both.substr(0, indexDelim)
-        let presentedToken = both.substr(indexDelim + 1);
-        if (indexDelim < 0) return false;
-        let actualToken = redisClient.hGet("app:" + appId, "apiToken");
-        return (typeof actualToken !== "undefined" && actualToken === presentedToken);
-    }
+    try {
+        if (req.headers.authorization.startsWith("Apikey")) {
+            let both = req.headers.authorization.substr(7)
+            let indexDelim = both.indexOf(":")
+            let appId = both.substr(0, indexDelim)
+            let presentedToken = both.substr(indexDelim + 1);
+            if (indexDelim < 0) return false;
+            let actualToken = redisClient.hGet("app:" + appId, "apiToken");
+            return (typeof actualToken !== "undefined" && actualToken === presentedToken);
+        }
+    }catch (e){}
     return false;
 }
 

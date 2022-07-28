@@ -21,7 +21,7 @@ function checkAdminSecret(req) {
     return (req.headers.authorization === "Secret " + process.env.SECRET)
 }
 
-function checkAPIKey(req) {
+async function checkAPIKey(req) {
     try {
         if (req.headers.authorization.startsWith("Apikey")) {
             let both = req.headers.authorization.substr(7)
@@ -29,10 +29,14 @@ function checkAPIKey(req) {
             let appId = both.substr(0, indexDelim)
             let presentedToken = both.substr(indexDelim + 1);
             if (indexDelim < 0) return false;
-            let actualToken = redisClient.hGet("app:" + appId, "apiToken");
+            let actualToken = await redisClient.hGet("app:" + appId, "apiToken");
+            console.log(actualToken)
+            console.log(presentedToken)
             return (typeof actualToken !== "undefined" && actualToken === presentedToken);
         }
-    }catch (e){}
+    } catch (e) {
+        console.log(e)
+    }
     return false;
 }
 
@@ -50,6 +54,9 @@ async function getUserBySus(req, res) {
     let balance = await redisClient.zScore("balance", "user:" + req.params.sus);
     let name = await redisClient.hGet("user:" + req.params.sus, "name");
 
+    if(name===null||balance===null){
+        return res.json({code: 404, method: "getUserBySus", error:"Sus not found"})
+    }
     // RESPONSE
     return res.json({code: 200, method: "getUserBySus", response: {name: name, balance: balance}})
 }
@@ -88,6 +95,9 @@ async function getAppByAppId(req, res) {
     let apiToken = await redisClient.hGet("app:" + req.params.appid, "apiToken");
     let name = await redisClient.hGet("app:" + req.params.appid, "name");
 
+    if(name===null||apiToken===null){
+        return res.json({code: 404, method: "getAppByAppId", error:"app not found"})
+    }
     // RESPONSE
     return res.json({code: 200, method: "getAppByAppId", response: {name: name, apiToken: apiToken}})
 }
@@ -238,10 +248,10 @@ appRouter.get('/user/:sus', getUserBySus)
 appRouter.get('/user/', getUsers)
 appRouter.patch('/user/:sus', patchUserBySus)
 
-app.use('/v1/', function (req, res, next) {
+app.use('/v1/', async function (req, res, next) {
     if (checkAdminSecret(req)) { //TODO Check Secret
         adminRouter(req, res, next)
-    } else if (checkAPIKey(req)) {
+    } else if (await checkAPIKey(req)) {
         appRouter(req, res, next)
     } else {
         next()

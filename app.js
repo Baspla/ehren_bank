@@ -253,8 +253,8 @@ app.use('/*', (req, res) => {
 async function start() {
     await redisClient.connect().then(() => {
         console.log(`Verbindung zu Redis auf ${process.env.REDIS_HOST}:${process.env.REDIS_PORT} hergestellt.`)
-        app.listen(process.env.PORT, () =>
-            console.log(`Express wurde auf ${process.env.PORT} gestartet.`)
+        app.listen(80, () =>
+            console.log(`Express wurde gestartet.`)
         );
     })
 }

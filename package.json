@@ -1,0 +1,17 @@
+{
+  "name": "ehren_bank",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Tim Morgner",
+  "license": "TBA",
+  "dependencies": {
+    "express": "^4.18.1",
+    "redis": "^4.2.0"
+  }
+}

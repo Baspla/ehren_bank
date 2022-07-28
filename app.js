@@ -200,7 +200,7 @@ async function deleteUserBySus(req, res) {
 
     // ACTION
     await redisClient.del("user:" + req.params.sus).then(value => {
-        if (value !== 0) {
+        if (value <= 0) {
             return res.json({code: 400, method: "deleteUserBySus", error: "unknown sus?"})
         } else {
             redisClient.zRem("balance", "user:" + req.params.sus);
@@ -217,7 +217,7 @@ async function deleteAppByAppId(req, res) {
 
 
     await redisClient.del("app:" + req.params.appid).then(value => {
-        if (value !== 0) {
+        if (value <= 0) {
             return res.json({code: 400, method: "deleteAppByAppId", error: "unknown appId?"})
         } else {
             return res.json({code: 200, method: "deleteAppByAppId"})

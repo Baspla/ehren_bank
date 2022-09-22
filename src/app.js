@@ -94,7 +94,7 @@ const transactionDescriptionRegex = /[^a-zA-Z\d\s]/g
 const descriptionRegex = /[^a-zA-Z\d\s]/g
 const adminRegex = /[^a-zA-Z-\d]/g
 const displaynameRegex = /[^a-zA-Z-\d\s\p{Emoji_Presentation}]/gu
-const usernameRegex = /[^a-zA-Z-]/g
+const usernameRegex = /[^a-zA-Z-\d]/g
 const appIdRegex = /[^a-zA-Z-]/g
 
 function sanitizeAppId(appid) {

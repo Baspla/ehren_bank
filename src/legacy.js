@@ -17,6 +17,7 @@ redisClient.on('error', err => {
 // CHECKS
 //
 
+
 function checkAdminSecret(req) {
     return (req.headers.authorization === "Secret " + process.env.SECRET)
 }
@@ -24,7 +25,7 @@ function checkAdminSecret(req) {
 async function checkAPIKey(req) {
     try {
         if (req.headers.authorization.startsWith("Apikey")) {
-            let both = req.headers.authorization.substr(7)
+            let both = req.headers.authorization.substring(7)
             let indexDelim = both.indexOf(":")
             let appId = both.substr(0, indexDelim)
             let presentedToken = both.substr(indexDelim + 1);
@@ -76,7 +77,7 @@ async function getUsers(req, res) {
     }
 
     // QUERIES
-    let result = await redisClient.zRange("balance", 0, n - 1, {REV: inverted})
+    let result = await redisClient.zRange("balance", 0, n - 1,"withscores", {REV: inverted})
 
     // RESPONSE
     return res.json({code: 200, method: "getUsers", response: result})
@@ -234,9 +235,9 @@ async function deleteAppByAppId(req, res) {
 // EXPRESS REST API
 //
 
-const app = express()
+const legacy = express()
 
-app.use(bodyParser.json({strict: true}));
+legacy.use(bodyParser.json({strict: true}));
 
 let adminRouter = express.Router()
 adminRouter.get('/user/:sus', getUserBySus)
@@ -251,7 +252,7 @@ appRouter.get('/user/:sus', getUserBySus)
 appRouter.get('/user/', getUsers)
 appRouter.patch('/user/:sus', patchUserBySus)
 
-app.use('/v1/', async function (req, res, next) {
+legacy.use('/v1/', async function (req, res, next) {
     if (checkAdminSecret(req)) { //TODO Check Secret
         adminRouter(req, res, next)
     } else if (await checkAPIKey(req)) {
@@ -261,14 +262,14 @@ app.use('/v1/', async function (req, res, next) {
     }
 })
 
-app.use('/*', (req, res) => {
+legacy.use('/*', (req, res) => {
     return res.status(401).json({code: 401, error: 'No Permission'})
 })
 
 async function start() {
     await redisClient.connect().then(() => {
         console.log(`Verbindung zu Redis auf ${process.env.REDIS_HOST}:${process.env.REDIS_PORT} hergestellt.`)
-        app.listen(80, () =>
+        legacy.listen(80, () =>
             console.log(`Express wurde gestartet.`)
         );
     })

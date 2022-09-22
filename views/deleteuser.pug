@@ -1,0 +1,27 @@
+doctype html
+link(rel='stylesheet', href='/css/bootstrap.css')
+script(src='/js/bootstrap.js')
+body
+    .container
+        h1.mb-3 Ehren Credit System
+        h2 User Löschen
+        hr
+        form
+            input.form-control.mb-3#appid(placeholder="Kennung des Users", type="text")
+            .alert.alert-danger
+                p Der User wird unwiderruflich gelöscht!
+                .d-flex
+                    input.form-control#admin(placeholder="Admin Kennwort", type="")
+                    button.ms-3.btn.btn-danger(type="button") Löschen
+        button.btn.btn-outline-primary.me-2(data-bs-toggle="modal" data-bs-target="#ask1") Beispiel Bestätigung
+        .modal.fade#ask1
+            .modal-dialog
+                .modal-content
+                    .modal-header.d-flex
+                        .modal-title Wollen sie das wirklich tun?
+                        button.btn-close(data-bs-dismiss="modal")
+                    .modal-body
+                        .alert.alert-danger Der User wird unwiderruflich gelöscht!
+                    .modal-footer
+                        button.btn.btn-secondary Abbrechen
+                        button.btn.btn-danger Löschen

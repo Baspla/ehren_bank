@@ -2,16 +2,23 @@
   "name": "ehren_bank",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Tim Morgner",
   "license": "TBA",
   "dependencies": {
+    "body-parser": "^1.20.0",
+    "bootstrap": "^5.2.1",
     "express": "^4.18.1",
-    "redis": "^4.2.0"
+    "express-session": "^1.17.3",
+    "jade-bootstrap": "^1.0.14",
+    "pug": "^3.0.2",
+    "redis": "^4.2.0",
+    "sanitize": "^2.1.2",
+    "uuid": "^9.0.0"
   }
 }

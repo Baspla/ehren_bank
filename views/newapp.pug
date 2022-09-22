@@ -1,0 +1,77 @@
+doctype html
+link(rel='stylesheet', href='/css/bootstrap.css')
+script(src='/js/bootstrap.js')
+body
+    .container
+        h1.mb-3 Ehren Credit System
+        h2 Neue App Registrieren
+        hr
+        form
+            input.form-control.mb-3#display(placeholder="Anzeigename der App", type="text")
+            input.form-control.mb-3#desc(placeholder="Beschreibung der App", type="text")
+            input.form-control.mb-3#appId(placeholder="Kennung der App", type="text")
+            h4 Rechte
+            .form-check
+                input.form-check-input#permissionsReadInfo(type="checkbox", value="")
+                label.form-check-label(for="permissionsReadInfo") Nutzerinfos einsehen
+            .form-check
+                input.form-check-input#permissionsReadBalance(type="checkbox", value="")
+                label.form-check-label(for="permissionsReadBalance") Punktestand einsehen
+            .form-check
+                input.form-check-input#permissionsAddBalance(type="checkbox", value="")
+                label.form-check-label(for="permissionsAddBalance") Punkte hinzufügen
+            .form-check.mb-3
+                input.form-check-input#permissionsSubBalance(type="checkbox", value="")
+                label.form-check-label(for="permissionsSubBalance") Punkte abziehen
+            .alert.alert-warning
+                p Nach der Registration können keine Änderungen an der App durchgeführt werden. Achten sie daher auf korrekte Angaben.
+                .d-flex
+                    input.form-control#admin(placeholder="Admin Kennwort", type="")
+                    button.ms-3.btn.btn-warning(type="button")#btn Registrieren
+            .alert.alert-danger(hidden)#alert
+                #alert-text
+        .modal.fade#ask
+            .modal-dialog
+                .modal-content
+                    .modal-header.d-flex
+                        .modal-title Deine App wurde registriert
+                        button.btn-close(data-bs-dismiss="modal")
+                    .modal-body
+                        p Dein API Token ist
+                        input.form-control#token(type="text", value="", readonly)
+    script.
+        function onclick() {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                console.log(this.status)
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                    console.log(this.responseText)
+                    var json = JSON.parse(this.responseText)
+                    if (json.error) {
+                        alert(json.error.message)
+                        console.log(json.error.message)
+                    } else {
+                        let ask = new bootstrap.Modal('#ask')
+                        document.getElementById("token").value = json.result.token
+                        ask.show()
+                    }
+                }
+            }
+            xhttp.open("POST", "jsonrpc", true);
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            let permissions = 0
+            permissions += (document.getElementById("permissionsReadInfo").checked?1:0)
+            permissions += (document.getElementById("permissionsReadBalance").checked?1:0)*2
+            permissions += (document.getElementById("permissionsAddBalance").checked?1:0)*4
+            permissions += (document.getElementById("permissionsSubBalance").checked?1:0)*8
+            xhttp.send('{"jsonrpc": "2.0", "method": "registerApp", "params":{"admin":"' + document.getElementById("admin").value + '" ,"displayName":"' + document.getElementById("display").value + '" ,"permissions":"' + permissions + '" , "appId":"' + document.getElementById("appId").value + '", "description":"' + document.getElementById("desc").value + '"},"id":"1"}');
+        }
+
+        const alertDiv = document.getElementById('alert')
+        const alertText = document.getElementById('alert-text')
+        const alert = (message) => {
+            alertDiv.hidden = false
+            alertText.innerText = message
+        }
+
+        document.getElementById("btn").onclick = onclick

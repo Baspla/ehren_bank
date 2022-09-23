@@ -2,9 +2,9 @@
   "name": "ehren_bank",
   "version": "1.0.2",
   "description": "",
-  "main": "src/app.js",
+  "main": "src/webapp.js",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node src/webapp.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

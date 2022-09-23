@@ -1,148 +1,30 @@
-doctype html
-html.h-100
-    head
-        link(rel='stylesheet', href='/css/bootstrap.css')
-        title Ehren Bank
-        script(src='/js/bootstrap.js')
-    body.h-100
-        .container.h-100#login
-            include login
-        .container#appList(hidden)
-            h1.mb-4 Ehren Credit System
-            #appListElements
-            .modal.fade#ask
-                .modal-dialog
-                    .modal-content
-                        .modal-header
-                            .modal-title Willst du das wirklich tun?
-                            button.btn-close(data-bs-dismiss="modal")
-                        .modal-body
-                            p
-                                span#askName
-                                span  darf dann von dir:
-                            ul.list-group
-                                #askPermissions
-                        .modal-footer
-                            button.btn.btn-secondary(data-bs-dismiss="modal") Doch nicht
-                            button.btn.btn-primary#askOK(data-bs-dismiss="modal") Ja, ich will!
-        script.
-            const alertDiv = document.getElementById('alert')
-            const alertText = document.getElementById('alert-text')
-            const alert = (message) => {
-                alertDiv.hidden = false
-                alertText.innerText = message
-            }
-
-            function activateAppModal(appId){
-                let ask = new bootstrap.Modal('#ask')
-                document.getElementById("askName").innerHTML=document.getElementById("name_"+appId).innerHTML;
-                document.getElementById("askPermissions").innerHTML=document.getElementById("permissions_"+appId).innerHTML;
-                document.getElementById("askOK").onclick = (()=>{activateApp(appId)})
-                ask.show()
-            }
-
-            function deactivateAppModal(appId){
-                deactivateApp(appId)
-            }
-
-            function activateApp(appId) {
-                console.log("Aktiviere " + appId)
-                const xhttp = new XMLHttpRequest();
-                xhttp.onload = function () {
-                    console.log(this.status)
-                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                        console.log(this.responseText)
-                        var json = JSON.parse(this.responseText)
-                        if (json.error) {
-                            console.log(json.error.message)
-                        }
-                        loadApps()
-                    }
-                }
-                xhttp.open("POST", "jsonrpc", true);
-                xhttp.setRequestHeader("Content-Type", "application/json");
-                xhttp.send('{"jsonrpc": "2.0", "method": "addApp", "params":{"username":"' + username + '", "password":"' + password + '", "appId":"'+appId+'"},"id":"1"}');
-            }
-
-            function deactivateApp(appId) {
-                console.log("Deaktiviere " + appId)
-                const xhttp = new XMLHttpRequest();
-                xhttp.onload = function () {
-                    console.log(this.status)
-                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                        console.log(this.responseText)
-                        var json = JSON.parse(this.responseText)
-                        if (json.error) {
-                            console.log(json.error.message)
-                        }
-                        loadApps()
-                    }
-                }
-                xhttp.open("POST", "jsonrpc", true);
-                xhttp.setRequestHeader("Content-Type", "application/json");
-                xhttp.send('{"jsonrpc": "2.0", "method": "removeApp", "params":{"username":"' + username + '", "password":"' + password + '", "appId":"' + appId + '"},"id":"1"}');
-            }
-
-            function loadApps(){
-                const xhttp = new XMLHttpRequest();
-                xhttp.onload = function () {
-                    console.log(this.status)
-                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                        console.log(this.responseText)
-                        var json = JSON.parse(this.responseText)
-                        if (json.error) {
-                            alert(json.error.message)
-                            console.log(json.error.message)
-                        } else {
-                            displayApps(json.result)
-                        }
-                    }
-                }
-                xhttp.open("POST", "jsonrpc", true);
-                xhttp.setRequestHeader("Content-Type", "application/json");
-                xhttp.send('{"jsonrpc": "2.0", "method": "getApps", "params":{"username":"' + username + '", "password":"' + password + '"},"id":"1"}');
-            }
-            function displayApps(result){
-                document.getElementById("login").hidden = true
-                let appListElements = document.getElementById("appListElements")
-                let appList = document.getElementById("appList")
-                appList.hidden=false
-                let inner = "";
-                for (const i in result) {
-                    let res = result[i]
-                    let activeText = (res.active?"Aktiv":"Inaktiv")
-                    let activeColor = (res.active?"success":"secondary")
-                    let permissions = ""
-                    for (const p in res.permissions) {
-                        permissions = permissions.concat('                <li class="list-group-item">'+res.permissions[p]+'</li>\n')
-                    }
-                    let element = '<div class="card mb-4">\n' +
-                    '    <div class="card-header">\n'+
-                    '        <h4 id="name_'+res.appId+'" class="card-title">'+res.name+'</h4>\n'+
-                    '        <div class="badge text-bg-'+activeColor+'">'+activeText+'</div>\n'+
-                    '    </div>\n'+
-                    '    <div class="card-body">\n'+
-                    '        <p>'+res.description+'</p>' +
-                    '        <p> Dieser Bot darf:' +
-                    '            <ul id="permissions_'+res.appId+'" class="list-group">\n'+
-                    permissions +
-                    '            </ul>\n' +
-                    '        </p>'+
-                    '    </div>\n'+
-                    '    <div class="card-footer justify-content-end d-flex"><button class="btn btn-primary me-2" onclick="activateAppModal(\''+res.appId+'\')" '+(res.active?"hidden":"")+'>Aktivieren</button><button class="btn btn-outline-danger me-2" onclick="deactivateAppModal(\''+res.appId+'\')" '+(res.active?"":"hidden")+'>Deaktivieren</button></div>\n'+
-                    '</div>'
-                    inner = inner.concat(element)
-                }
-                appListElements.innerHTML=inner;
-            }
-
-            let username;
-            let password;
-
-            function onclickLogin() {
-                username = document.getElementById("username").value;
-                password = document.getElementById("password").value;
-                loadApps()
-            }
-
-            document.getElementById("loginButton").onclick = onclickLogin
+extends includes/layout
+block append scripts
+    script(src='/scripts/alert.js' defer)
+    script(src='/scripts/apps.js' defer)
+block content
+    .container.h-100#appList
+        h1.mb-4 Ehren Credit System
+        .alert.alert-danger(hidden)#alert
+            #alert-text
+        #appListElements
+        .modal.fade#ask
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        .modal-title Willst du das wirklich tun?
+                        button.btn-close(data-bs-dismiss="modal")
+                    .modal-body
+                        p
+                            span#askName
+                            span  darf dann von dir:
+                        ul.list-group#askPermissions
+                    .modal-body
+                        p
+                            span Gib deine
+                            span#askName2
+                            span  Kennung ein
+                        input.form-control#token(type="text", value="")
+                    .modal-footer
+                        button.btn.btn-secondary(data-bs-dismiss="modal") Doch nicht
+                        button.btn.btn-primary#askOK(data-bs-dismiss="modal") Ja, ich will!

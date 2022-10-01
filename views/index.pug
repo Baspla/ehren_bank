@@ -5,6 +5,7 @@ include includes/base
                 | Willkommen auf der Ehrenbank
             p.lead
                 include includes/greeting
+            p Du bist seit #{new Date(user.created).toLocaleDateString("de-DE")} dabei.
         .container.mx-auto.my-5
             .card.mb-5
                 img.card-img-top(src='https://as2.ftcdn.net/v2/jpg/03/30/59/79/1000_F_330597957_u2ohf3DLB7FAj5FlwIBNGE4TjEnPcceN.jpg', alt='Konto Banner', style='height: 200px; object-fit: cover;')

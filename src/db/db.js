@@ -43,8 +43,11 @@ export async function getUserInfo(username) {
             username: username,
             displayname: values[0].displayname,
             balance: values[1],
-            created: values[0].created,
-            lastlogin: values[0].lastlogin
+            created: parseInt(values[0].created),
+            lastlogin: parseInt(values[0].lastlogin)
         }
     })
+}
+export async function getUserCount() {
+    return rc.zCard('cash:balance')
 }

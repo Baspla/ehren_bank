@@ -1,5 +1,5 @@
 import request from "request";
-import {createOrUpdateUser, getUserInfo} from "./db/db.js";
+import {createOrUpdateUser, getUserCount, getUserInfo} from "./db/db.js";
 
 export function login(req, res) {
     if (isLoggedIn(req)) {
@@ -19,7 +19,9 @@ export function index(req, res) {
             res.render('error', {error: err})
         })
     } else {
-        res.render('guest')
+        getUserCount().then(count => {
+            res.render('guest',{usercount: count})
+        })
     }
 }
 

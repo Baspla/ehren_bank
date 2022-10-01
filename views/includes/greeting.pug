@@ -1,0 +1,19 @@
+if hour != null
+    if hour < 5
+        span Schlaf gut, #{user.displayname}.
+    else if hour < 10
+        span Guten Morgen, #{user.displayname}.
+    else if hour < 12
+        span Hallo, #{user.displayname}.
+    else if hour < 14
+        span Mahlzeit, #{user.displayname}.
+    else if hour < 18
+        span Guten Tag, #{user.displayname}.
+    else if hour < 22
+        span Guten Abend, #{user.displayname}.
+    else if hour < 24
+        span Gute Nacht, #{user.displayname}.
+    else
+        span Hallöchen, #{user.displayname}.
+else
+    span Hallöchen, #{user.displayname}.

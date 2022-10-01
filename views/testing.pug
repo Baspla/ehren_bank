@@ -1,0 +1,40 @@
+doctype html
+html
+    include includes/head
+    block append scripts
+        script(src='/scripts/testing.js' defer)
+    body
+        .container.d-flex.justify-content-center
+            .container-fluid.align-self-center
+                h1 Ehren Credit System Testing
+                .alert.alert-secondary.mb-3(hidden)#request
+                    h5 Request
+                    span#requestText
+                .alert.alert-primary.mb-3(hidden)#response
+                    h5 Response
+                    span#responseText
+                .alert.alert-danger.mb-3(hidden)#error
+                    h5#errorCode
+                    span#errorText
+                form
+                    select.form-select.mb-3#method
+                        option(disabled) -- SESSION --
+                        option(value="registerUser") registerUser(userID, password, displayName)
+                        option(value="login") login(userID, password)
+                        option(value="userAddApp") userAddApp(session.userID, appID, userREF)
+                        option(value="userRemoveApp") userRemoveApp(session.userID, appID)
+                        option(value="modifyUser") modifyUser(session.userID, displayName)
+                        option(value="modifyUserPassword") modifyUserPassword(session.userID, password)
+                        option(disabled) -- ADMIN --
+                        option(value="registerApp") registerApp(appID, displayName, description, permissions, usesUserREF)
+                        option(value="modifyApp") modifyApp(appID, displayName, description, permissions, usesUserREF)
+                        option(value="deleteApp") deleteApp(appID)
+                        option(value="deleteUser") deleteUser(userID)
+                        option(disabled) -- APP --
+                        option(value="getUserinfo") getUserinfo(appToken, userREF)
+                        option(value="getBalance") getBalance(appToken, userREF)
+                        option(value="addBalance") addBalance(appToken,userREF, amount, description)
+                        option(value="subBalance") subBalance(appToken,userREF, amount, description)
+                        option(value="getAppUsers") getAppUsers(appToken)
+                    input.form-control.mb-3#params(placeholder="Parameter", type="text")
+                    button.btn.btn-primary#btn(type="button") Senden

@@ -1,5 +1,7 @@
-module.exports = {
-    auth:      '{"code": 11, "message": "Invalid Username or Password"}',
+export const errors = {
+    permission:     '{"code": 18, "message": "You do not have permission to do this."}',
+    amount:         '{"code": 17, "message": "Amount must above 0"}',
+    auth:           '{"code": 16, "message": "Invalid Username or Password"}',
     adminKey:       '{"code": 15, "message": "New Admin Key created"}',
     todo:           '{"code": 14, "message": "This method is still being worked on"}',
     notActive:      '{"code": 13, "message": "App is not active for this user"}',

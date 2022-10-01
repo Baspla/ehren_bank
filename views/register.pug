@@ -1,13 +1,17 @@
-extends includes/layout
-block content
-    .container.text-center.h-100.d-flex.justify-content-center
-        .container-s.align-self-center
-            h1 Ehren Credit System
-            .alert.alert-danger(hidden)#alert
-                #alert-text
-            form
-                input.form-control.mb-3#display(placeholder="Anzeigename", type="text")
-                input.form-control.mb-3#username(placeholder="Nutzername", type="text")
-                input.form-control.mb-3#password(placeholder="Passwort", type="password")
-                button.btn.btn-primary#btn(type="button") Registrieren
-    script(ref="/scripts/register.js")
+doctype html
+html.h-100
+    include includes/head
+    block append scripts
+        script(src='/scripts/alert.js' defer)
+        script(src='/scripts/register.js' defer)
+    body.h-100
+        .container.text-center.h-100.d-flex.justify-content-center
+            .container-s.align-self-center
+                h1 Ehren Credit System
+                .alert.alert-danger(hidden)#alert
+                    #alert-text
+                form
+                    input.form-control.mb-3#display(placeholder="Anzeigename", type="text")
+                    input.form-control.mb-3#username(placeholder="Nutzername", type="text")
+                    input.form-control.mb-3#password(placeholder="Passwort", type="password")
+                    button.btn.btn-primary#btn(type="button") Registrieren

@@ -18,11 +18,4 @@ function onclick(){
     xhttp.send('{"jsonrpc": "2.0", "method": "registerUser", "params":{"displayName":"'+document.getElementById("display").value+'" , "username":"'+document.getElementById("username").value+'", "password":"'+document.getElementById("password").value+'"},"id":"1"}');
 }
 
-const alertDiv = document.getElementById('alert')
-const alertText = document.getElementById('alert-text')
-const alert = (message) => {
-    alertDiv.hidden=false
-    alertText.innerText=message
-}
-
 document.getElementById("btn").onclick=onclick

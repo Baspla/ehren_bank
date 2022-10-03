@@ -31,10 +31,10 @@ export function callback(req, res) {
         request(process.env.GUARD_URL + '/sso?GUARDTOKEN=' + GUARDTOKEN, function (error, response, body) {
             if (!error && response.statusCode === 200) {
                 let ssoResponse = JSON.parse(body)
-                if (ssoResponse.username !== null && ssoResponse.displayname !== null) {
-                    req.session.username = ssoResponse.username
+                if (ssoResponse.uuid !== null && ssoResponse.displayname !== null) {
+                    req.session.uuid = ssoResponse.uuid
                     req.session.displayname = ssoResponse.displayname
-                    createOrUpdateUser(ssoResponse.username, ssoResponse.displayname)
+                    createOrUpdateUser(ssoResponse.uuid, ssoResponse.displayname)
                     return res.redirect('/')
                 }
             }

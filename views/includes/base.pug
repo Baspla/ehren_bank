@@ -20,7 +20,7 @@ html
                         ul.navbar-nav.ms-auto
                             if user != null
                                 li.nav-item
-                                    a.nav-link.active Angemeldet als #{user.username}
+                                    a.nav-link.active Angemeldet als #{user.displayname}
                                 li.nav-item
                                     a.nav-link(href='/logout') Abmelden
                             else

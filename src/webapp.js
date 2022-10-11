@@ -40,10 +40,10 @@ webapp.post('/jsonrpc', jsonrpcHandler);
 webapp.get('/', index)
 
 webapp.get('/apps', async (req, res) => {
-    if (req.session.username !== undefined) {
-        let username = req.session.username
-        let apps = await getAppListForUser(username)
-        res.render('apps', {apps: apps, username: username})
+    if (req.session.uuid !== undefined) {
+        let displayname = req.session.displayname
+        let apps = await getAppListForUser(uuid)
+        res.render('apps', {apps: apps, displayname: displayname})
     } else {
         res.redirect('/login')
     }

@@ -11,7 +11,7 @@ export function login(req, res) {
 
 export function index(req, res) {
     if (isLoggedIn(req)) {
-        getUserInfo(req.session.username).then(user => {
+        getUserInfo(req.session.uuid).then(user => {
                 console.log(user)
                 res.render('index', {user: user, hour: new Date().getHours()})
             }
@@ -31,10 +31,10 @@ export function callback(req, res) {
         request(process.env.GUARD_URL + '/sso?GUARDTOKEN=' + GUARDTOKEN, function (error, response, body) {
             if (!error && response.statusCode === 200) {
                 let ssoResponse = JSON.parse(body)
-                if (ssoResponse.username !== null && ssoResponse.displayname !== null) {
-                    req.session.username = ssoResponse.username
+                if (ssoResponse.uuid && ssoResponse.displayname) {
+                    req.session.uuid = ssoResponse.uuid
                     req.session.displayname = ssoResponse.displayname
-                    createOrUpdateUser(ssoResponse.username, ssoResponse.displayname)
+                    createOrUpdateUser(ssoResponse.uuid, ssoResponse.displayname)
                     return res.redirect('/')
                 }
             }
@@ -46,5 +46,5 @@ export function callback(req, res) {
 }
 
 function isLoggedIn(req) {
-    return req.session.username !== undefined
+    return req.session.uuid !== undefined
 }

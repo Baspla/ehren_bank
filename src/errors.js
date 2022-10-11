@@ -9,7 +9,7 @@ export const errors = {
     appExists:      '{"code": 11, "message": "App already exists"}',
     dbError:        '{"code": 10, "message": "Database Error"}',
     userCreate:     '{"code": 9, "message": "Could not create User"}',
-    username:       '{"code": 8, "message": "Malformed Username"}',
+    uuid:       '{"code": 8, "message": "Malformed Uuid"}',
     displayname:    '{"code": 7, "message": "Malformed Displayname"}',
     sessionExpired: '{"code": 6, "message": "Session expired"}',
     batch:          '{"code": 5, "message": "Batch calls are not supported yet"}',

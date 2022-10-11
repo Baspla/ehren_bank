@@ -30,11 +30,11 @@ export async function jsonrpcHandler(request, response) {
         }
         switch (request_method) {
             case "login":
-                if (request_params.username !== undefined && request_params.password !== undefined) {
-                    let username = request_params.username
+                if (request_params.uuid !== undefined && request_params.password !== undefined) {
+                    let uuid = request_params.uuid
                     let password = request_params.password
-                    if (await authUser(username, password)) {
-                        request.session.username = username;
+                    if (await authUser(uuid, password)) {
+                        request.session.uuid = uuid;
                         response.send('{"jsonrpc": "2.0", "result":{"success":true},"id":' + request_id + '}');
                     } else {
                         response.send('{"jsonrpc": "2.0", "error": ' + errors.auth + ',"id":' + request_id + '}');
@@ -45,9 +45,9 @@ export async function jsonrpcHandler(request, response) {
                 response.end();
                 return;
             case "userAddApp":
-                if (request.session.username) {
+                if (request.session.uuid) {
                     if (request_params.uid !== undefined && request_params.appId !== undefined) {
-                        response.send(await apiAddApp(request_id, request.session.username, request_params.appId, uid))
+                        response.send(await apiAddApp(request_id, request.session.uuid, request_params.appId, uid))
                     } else {
                         response.send('{"jsonrpc": "2.0", "error": ' + errors.parameters + ',"id":' + request_id + '}');
                     }
@@ -57,9 +57,9 @@ export async function jsonrpcHandler(request, response) {
                 response.end();
                 return;
             case "userRemoveApp":
-                if (request.session.username) {
+                if (request.session.uuid) {
                     if (request_params.appId !== undefined) {
-                        response.send(await apiRemoveApp(request_id, request.session.username, request_params.appId))
+                        response.send(await apiRemoveApp(request_id, request.session.uuid, request_params.appId))
                     } else {
                         response.send('{"jsonrpc": "2.0", "error": ' + errors.parameters + ',"id":' + request_id + '}');
                     }
@@ -69,8 +69,8 @@ export async function jsonrpcHandler(request, response) {
                 response.end();
                 return;
             case "registerUser":
-                if (request_params.displayName !== undefined && request_params.username !== undefined && request_params.password !== undefined) {
-                    response.send(await apiRegisterUser(request_id, request_params.displayName, request_params.username, request_params.password));
+                if (request_params.displayName !== undefined && request_params.uuid !== undefined && request_params.password !== undefined) {
+                    response.send(await apiRegisterUser(request_id, request_params.displayName, request_params.uuid, request_params.password));
                 } else {
                     response.send('{"jsonrpc": "2.0", "error": ' + errors.parameters + ',"id":' + request_id + '}');
                 }
@@ -97,8 +97,8 @@ export async function jsonrpcHandler(request, response) {
                 response.end();
                 return;
             case "deleteUser":
-                if (request_params.admin !== undefined && request_params.username !== undefined) {
-                    response.send(await apiDeleteUser(request_id, request_params.admin, request_params.username));
+                if (request_params.admin !== undefined && request_params.uuid !== undefined) {
+                    response.send(await apiDeleteUser(request_id, request_params.admin, request_params.uuid));
                 } else {
                     response.send('{"jsonrpc": "2.0", "error": ' + errors.parameters + ',"id":' + request_id + '}');
                 }
@@ -156,28 +156,28 @@ export async function jsonrpcHandler(request, response) {
 }
 
 
-async function apiAddApp(request_id, username, appId, uid) {
+async function apiAddApp(request_id, uuid, appId, uid) {
     if (uid === null) {
         uid = ""
     }
-    await addUserApp(username, appId, uid)
+    await addUserApp(uuid, appId, uid)
     return '{"jsonrpc": "2.0", "result":{"success":true},"id":' + request_id + '}'
 }
 
-async function apiRemoveApp(request_id, username, appId) {
-    await removeUserApp(username, appId)
+async function apiRemoveApp(request_id, uuid, appId) {
+    await removeUserApp(uuid, appId)
     return '{"jsonrpc": "2.0", "result":{"success":true},"id":' + request_id + '}'
 }
 
-async function apiRegisterUser(request_id, displayName, username, password) {
+async function apiRegisterUser(request_id, displayName, uuid, password) {
     if (displayName.match(displaynameRegex) !== null) {
         return '{"jsonrpc": "2.0", "error": ' + errors.displayname + ',"id":' + request_id + '}'
     }
-    if (username.match(usernameRegex) !== null) {
-        return '{"jsonrpc": "2.0", "error": ' + errors.username + ',"id":' + request_id + '}'
+    if (uuid.match(uuidRegex) !== null) {
+        return '{"jsonrpc": "2.0", "error": ' + errors.uuid + ',"id":' + request_id + '}'
     }
 
-    let success = await createUser(displayName, username, password, 0);
+    let success = await createUser(displayName, uuid, password, 0);
     if (success) {
         return '{"jsonrpc": "2.0", "result":{"success":true},"id":' + request_id + '}'
     } else {
@@ -206,10 +206,10 @@ async function apiDeleteApp(request_id, admin, appId) {
     }
 }
 
-async function apiDeleteUser(request_id, admin, username) {
+async function apiDeleteUser(request_id, admin, uuid) {
     if (admin === admin_key) {
         recreateAdminKey(request_id)
-        await deleteUser(admin, username)
+        await deleteUser(admin, uuid)
         return '{"jsonrpc": "2.0", "result":{"success":true},"id":' + request_id + '}'
     } else {
         recreateAdminKey(request_id);
@@ -220,11 +220,11 @@ async function apiDeleteUser(request_id, admin, username) {
 
 async function apiGetUser(request_id, appToken, uid) {
     let appId = await getAppIdByToken(appToken);
-    let username = await getUsernameByUID(appId, uid);
-    if (await isAppActiveForUser(appId, username)) {
+    let uuid = await getuuidByUID(appId, uid);
+    if (await isAppActiveForUser(appId, uuid)) {
         if (await hasAppPermission(appId, permissions.USER_INFO)) {
-            let display = await getUserDisplay(username);
-            return '{"jsonrpc": "2.0", "result":{"username":"' + username + '","display":"' + display + '"},"id":' + request_id + '}'
+            let display = await getUserDisplay(uuid);
+            return '{"jsonrpc": "2.0", "result":{"username":"' + uuid + '","display":"' + display + '"},"id":' + request_id + '}'
         } else {
             return '{"jsonrpc": "2.0", "error": ' + errors.permission + ',"id":' + request_id + '}'
         }
@@ -236,11 +236,11 @@ async function apiGetUser(request_id, appToken, uid) {
 async function apiGetBalance(request_id, appToken, uid) {
     let appId = await getAppIdByToken(appToken);
     if (appId) {
-        let username = await getUsernameByUID(appId, uid);
-        if (username) {
+        let uuid = await getuuidByUID(appId, uid);
+        if (uuid) {
             if (await hasAppPermission(appId, permissions.USER_BALANCE)) {
-                let balance = await getBalance(username);
-                return '{"jsonrpc": "2.0", "result":{"username":"' + username + '","balance":"' + balance + '"},"id":' + request_id + '}'
+                let balance = await getBalance(uuid);
+                return '{"jsonrpc": "2.0", "result":{"username":"' + uuid + '","balance":"' + balance + '"},"id":' + request_id + '}'
             } else {
                 return '{"jsonrpc": "2.0", "error": ' + errors.permission + ',"id":' + request_id + '}'
             }
@@ -255,13 +255,13 @@ async function apiGetBalance(request_id, appToken, uid) {
 
 async function apiAddBalance(request_id, appToken, uid, amount, description) {
     let appId = await getAppIdByToken(appToken);
-    let username = await getUsernameByUID(appId, uid);
+    let uuid = await getuuidByUID(appId, uid);
     if (amount <= 0) {
         return '{"jsonrpc": "2.0", "error": ' + errors.amount + ',"id":' + request_id + '}'
     }
-    if (await isAppActiveForUser(appId, username)) {
+    if (await isAppActiveForUser(appId, uuid)) {
         if (await hasAppPermission(appId, permissions.USER_BALANCE_ADD)) {
-            await incrementBalance(username, amount, appId, description);
+            await incrementBalance(uuid, amount, appId, description);
             return '{"jsonrpc": "2.0", "result":{"success":true},"id":' + request_id + '}'
         } else {
             return '{"jsonrpc": "2.0", "error": ' + errors.permission + ',"id":' + request_id + '}'
@@ -273,17 +273,17 @@ async function apiAddBalance(request_id, appToken, uid, amount, description) {
 
 async function apiSubBalance(request_id, appToken, uid, amount, description) {
     let appId = await getAppIdByToken(appToken);
-    let username = await getUsernameByUID(appId, uid);
+    let uuid = await getuuidByUID(appId, uid);
     if (amount <= 0) {
         return '{"jsonrpc": "2.0", "error": ' + errors.amount + ',"id":' + request_id + '}'
     }
-    if (await isAppActiveForUser(appId, username)) {
+    if (await isAppActiveForUser(appId, uuid)) {
         if (await hasAppPermission(appId, permissions.USER_BALANCE_SUB)) {
-            let balance = await getBalance(username);
+            let balance = await getBalance(uuid);
             if (balance - amount < 0) {
                 return '{"jsonrpc": "2.0", "error": ' + errors.lowBalance + ',"id":' + request_id + '}'
             }
-            await decrementBalance(username, amount, appId, description);
+            await decrementBalance(uuid, amount, appId, description);
             return '{"jsonrpc": "2.0", "result":{"success":true},"id":' + request_id + '}'
         } else {
             return '{"jsonrpc": "2.0", "error": ' + errors.permission + ',"id":' + request_id + '}'

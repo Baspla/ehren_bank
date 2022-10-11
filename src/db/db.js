@@ -26,21 +26,21 @@ export function bool(boolean) {
     return boolean ? 1 : 0;
 }
 
-export async function createOrUpdateUser(username, displayname) {
+export async function createOrUpdateUser(uuid, displayname) {
     return Promise.all([
-        rc.hSet('cash:user:' + username, 'displayname', displayname),
-        rc.hSet('cash:user:' + username, 'lastlogin', new Date().getTime()),
-        rc.hSet('cash:user:' + username, 'created', new Date().getTime(), {NX: true}),
-        rc.zAdd('cash:balance', {score: 0, value: username}, {NX: true})
+        rc.hSet('cash:user:' + uuid, 'displayname', displayname),
+        rc.hSet('cash:user:' + uuid, 'lastlogin', new Date().getTime()),
+        rc.hSet('cash:user:' + uuid, 'created', new Date().getTime(), {NX: true}),
+        rc.zAdd('cash:balance', {score: 0, value: uuid}, {NX: true})
    ])
 }
 
-export async function getUserInfo(username) {
-    let userData = rc.hGetAll('cash:user:' + username);
-    let balance = rc.zScore('cash:balance', username);
+export async function getUserInfo(uuid) {
+    let userData = rc.hGetAll('cash:user:' + uuid);
+    let balance = rc.zScore('cash:balance', uuid);
     return Promise.all([userData, balance]).then(values => {
         return {
-            username: username,
+            uuid: uuid,
             displayname: values[0].displayname,
             balance: values[1],
             created: parseInt(values[0].created),

@@ -1,28 +1,46 @@
 import request from "request";
 import {createOrUpdateUser, getUserCount, getUserInfo} from "./db/db.js";
 
+function errorHandler() {
+    return function (err, req, res, next) {
+        res.status(500)
+        res.render('error', {error: err})
+    }
+}
+function isLoggedIn(req) {
+    return req.session.uuid !== undefined
+}
+
 export function login(req, res) {
     if (isLoggedIn(req)) {
-        res.redirect('/')
+        res.redirect('/dash')
     } else {
         res.redirect(process.env.GUARD_URL + '/login?returnURL=' + encodeURIComponent(process.env.BASE_URL + '/callback'))
     }
 }
 
-export function index(req, res) {
+export function dashboard(req, res) {
     if (isLoggedIn(req)) {
         getUserInfo(req.session.uuid).then(user => {
-                console.log(user)
-                res.render('index', {user: user, hour: new Date().getHours()})
+                res.render('dashboard', {user: user, hour: new Date().getHours()})
             }
-        ).catch(err => {
-            res.render('error', {error: err})
-        })
+        ).catch(errorHandler)
     } else {
-        getUserCount().then(count => {
-            res.render('guest',{usercount: count})
-        })
+        res.redirect('/login')
     }
+}
+
+
+export function index(req, res) {
+    getUserCount().then(count => {
+        if (isLoggedIn(req)) {
+            getUserInfo(req.session.uuid).then(user => {
+                res.render('index', {usercount: count, user: user, hour: new Date().getHours()})
+            }).catch(errorHandler)
+        } else {
+            res.render('index', {usercount: count})
+        }
+    }).catch(errorHandler)
 }
 
 export function callback(req, res) {
@@ -35,7 +53,7 @@ export function callback(req, res) {
                     req.session.uuid = ssoResponse.uuid
                     req.session.displayname = ssoResponse.displayname
                     createOrUpdateUser(ssoResponse.uuid, ssoResponse.displayname)
-                    return res.redirect('/')
+                    return res.redirect('/dash')
                 }
             }
             res.status(response.statusCode).send(body)
@@ -45,6 +63,47 @@ export function callback(req, res) {
     }
 }
 
-function isLoggedIn(req) {
-    return req.session.uuid !== undefined
+
+export function shop(req, res) {
+    if (isLoggedIn(req)) {
+        getUserInfo(req.session.uuid).then(user => {
+                res.render('shop', {user: user, hour: new Date().getHours()})
+            }
+        ).catch(errorHandler)
+    } else {
+        res.redirect('/login')
+    }
+}
+
+export function items(req, res) {
+    if (isLoggedIn(req)) {
+        getUserInfo(req.session.uuid).then(user => {
+                res.render('items', {user: user, hour: new Date().getHours()})
+            }
+        ).catch(errorHandler)
+    } else {
+        res.redirect('/login')
+    }
+}
+
+export function transactions(req, res) {
+    if (isLoggedIn(req)) {
+        getUserInfo(req.session.uuid).then(user => {
+                res.render('transactions', {user: user, hour: new Date().getHours()})
+            }
+        ).catch(errorHandler)
+    } else {
+        res.redirect('/login')
+    }
+}
+
+export function transfer(req, res) {
+    if (isLoggedIn(req)) {
+        getUserInfo(req.session.uuid).then(user => {
+                res.render('transfer', {user: user, hour: new Date().getHours()})
+            }
+        ).catch(errorHandler)
+    } else {
+        res.redirect('/login')
+    }
 }

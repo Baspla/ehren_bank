@@ -5,25 +5,25 @@ html
         block main
             nav.navbar.navbar-expand-lg.bg-light
                 .container-fluid.me-auto
-                    a.navbar-brand(href='#') Ehrenbank
+                    a.navbar-brand(href='/') Ehrenbank
                     button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
                         span.navbar-toggler-icon
                     #navbarNav.collapse.navbar-collapse
                         ul.navbar-nav
                             li.nav-item
-                                a.nav-link.active(href='/') Home
+                                a.nav-link(href='/dash') Dashboard
                             if user != null
                                 li.nav-item
-                                    a.nav-link.disabled(href='apps') Shop
+                                    a.nav-link(href='/shop') Shop
                                 li.nav-item
-                                    a.nav-link.disabled(href='items') Items
+                                    a.nav-link(href='/items') Items
                         ul.navbar-nav.ms-auto
                             if user != null
                                 li.nav-item
                                     a.nav-link.active Angemeldet als #{user.displayname}
                                 li.nav-item
-                                    a.nav-link(href='/logout') Abmelden
+                                    a.btn.btn-outline-secondary(href='/logout') Abmelden
                             else
                                 li.nav-item
-                                    a.nav-link(href='/login') Anmelden
+                                    a.btn.btn-outline-secondary(href='/login') Anmelden
             block content

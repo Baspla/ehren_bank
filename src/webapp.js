@@ -1,11 +1,11 @@
-import {jsonrpcHandler} from "./jsonrpc.js"
 import express from "express";
 import session from 'express-session'
 import cookieParser from 'cookie-parser';
 import {startDB} from "./db/db.js";
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
-import {callback, index, login} from "./controller.js";
+import {callback, index, login, dashboard, shop, items, transactions, transfer} from "./controller.js";
+import {restapi} from "./restapi.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,42 +28,37 @@ webapp.use('/scripts', express.static(__dirname + '/../scripts'))
 webapp.use(express.json());
 
 //
-// JSON RPC ENDPOINT
+// API
 //
 
-webapp.post('/jsonrpc', jsonrpcHandler);
-
+webapp.use('/api/v1', restapi())
 //
 // WEP PAGES
 //
 
 webapp.get('/', index)
 
-webapp.get('/apps', async (req, res) => {
-    if (req.session.uuid !== undefined) {
-        let displayname = req.session.displayname
-        let apps = await getAppListForUser(uuid)
-        res.render('apps', {apps: apps, displayname: displayname})
-    } else {
-        res.redirect('/login')
-    }
-})
+webapp.get('/dash', dashboard)
 
 webapp.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
 
-webapp.get('/login',login)
+webapp.get('/login', login)
 
-webapp.get('/callback',callback)
+webapp.get('/callback', callback)
+
+webapp.get('/shop', shop)
+
+webapp.get('/items', items)
+
+webapp.get('/transactions', transactions)
+
+webapp.get('/transfer', transfer)
 
 webapp.get('/registerapp', (req, res) => {
     res.render('registerapp')
-})
-
-webapp.get('/testing', (req, res) => {
-    res.render('testing')
 })
 
 webapp.get('/deleteapp', (req, res) => {

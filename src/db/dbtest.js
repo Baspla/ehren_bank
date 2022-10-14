@@ -1,11 +1,10 @@
-import {createApp, createUser, startDB} from "./db.js";
-import {permissions} from "../permissions.js";
+import {createApp, startDB} from "./db.js";
 
 startDB().then(() => {
     console.log("Connected to Redis");
 })
 
 
-createApp("Pay2Win Game", "pay2wingame", "A game that is pay2win", permissions.USER_INFO+permissions.USER_BALANCE+permissions.USER_BALANCE_SUB, true).then(value => {
+createApp("testappid","Test App", "A game that is pay2win", "http://localhost",0).then(value => {
     console.log(value);
 })

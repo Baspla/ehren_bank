@@ -1,9 +1,9 @@
 // noinspection JSUnresolvedVariable
 
 import './sanitizer.js'
-import {errors} from "./errors.js";
+import {errors} from "../src/errors.js";
 import {v4 as uuid} from "uuid";
-import {permissions} from "./permissions.js";
+import {permissions} from "../src/permissions.js";
 
 let admin_key = uuid();
 

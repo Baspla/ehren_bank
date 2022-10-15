@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import {startDB} from "./db/db.js";
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
-import {callback, index, login, dashboard, shop, items, transactions, transfer} from "./controller.js";
+import {callback, index, login, dashboard, shop, items, transactions, transfer, apps} from "./controller.js";
 import {restapi} from "./restapi.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -56,6 +56,8 @@ webapp.get('/items', items)
 webapp.get('/transactions', transactions)
 
 webapp.get('/transfer', transfer)
+
+webapp.get('/apps', apps)
 
 webapp.get('/registerapp', (req, res) => {
     res.render('registerapp')

@@ -17,6 +17,8 @@ html
                                     a.nav-link(href='/shop') Shop
                                 li.nav-item
                                     a.nav-link(href='/items') Items
+                                li.nav-item
+                                    a.nav-link(href='/apps') Apps
                         ul.navbar-nav.ms-auto
                             if user != null
                                 li.nav-item
@@ -27,3 +29,16 @@ html
                                 li.nav-item
                                     a.btn.btn-outline-secondary(href='/login') Anmelden
             block content
+                | Kein Inhalt vorhanden
+            block footer
+                footer.footer.mt-4
+                    .container
+                        .row
+                            .col
+                                p.text-center.text-muted
+                                    | Ehrenbank #{new Date().getFullYear()}
+                                    br
+                                    | Made with ❤️ by
+                                    |
+                                    |
+                                    a(href='https://timmorgner.de').link-dark.text-decoration-none Tim

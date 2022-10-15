@@ -108,7 +108,8 @@ export async function createApp(appid, name, description, url, permissions) {
         rc.hSetNX('cash:app:' + appid, 'description', description.toString()),
         rc.hSetNX('cash:app:' + appid, 'url', url.toString()),
         rc.hSetNX('cash:app:' + appid, 'permissions', permissions.toString()),
-        rc.hSetNX('cash:app:' + appid, 'created', new Date().getTime().toString())
+        rc.hSetNX('cash:app:' + appid, 'created', new Date().getTime().toString()),
+        rc.sAdd('cash:apps', appid)
     ])
 }
 
@@ -151,4 +152,9 @@ export async function updateApp(appid, name, description, url, permissions) {
         rc.hSet('cash:app:' + appid, 'url', url),
         rc.hSet('cash:app:' + appid, 'permissions', permissions)
     ])
+}
+
+
+export async function getApps() {
+    return rc.sMembers('cash:apps')
 }

@@ -1,34 +1,33 @@
-include includes/base
-    block scripts
-    block content
-        .text-center.px-4.py-5.bg-primary.text-white
-            h2.display-6.fw-bold
-                | Willkommen auf der Ehrenbank
-            p.lead
-                | Mit Ehre werden die Besten belohnt
-        .container-lg.mx-auto.my-5
-            .container.d-flex
-                .row
-                    .col-8
-                        h3.display-4 Eine Ehrenbank für alle
-                        .fs-5
-                            p Die Erhenbank stellt allen Nutzern mit einem GUARD Account ein Konto zur Verfügung, auf dem sie ihre Ehre sammeln können.
-                                |  Mit Ehre können sie sich in der Community beweisen und sich mit anderen Nutzern messen.
-                            p Mit Ehre können sie sich auch in den Shops Gegenstände kaufen, die dann in ihrem Inventar gespeichert werden.
-                    .col-4.float-end.mb-3
-                        .rounded(style='overflow:hidden')
-                            img.rounded(src='https://www.tagesschau.de/multimedia/bilder/bank-of-england-117~_v-original.jpg', alt='Bank of England', style='height:100%;width:540px;background-position: center center;background-size: cover;margin-left:50%;transform: translateX(-50%);')
-                    .col-lg-8.col-md-12
-                        h3.display-5 Wie kann ich Ehre bekommen?
-                        p.fs-5 Apps können Ehre an ihre Nutzer verteilen. Du kannst Ehre auch durch das Erledigen von Aufgaben erhalten.
-                    .col-lg-4.col-md-12.text-lg-center
-                        h3.display-5 Werde einer von bereits #{usercount || 0} Nutzern
+extends includes/base
+block content
+    .text-center.px-4.py-5.bg-primary.text-white
+        h2.display-6.fw-bold
+            | Willkommen auf der Ehrenbank
+        p.lead
+            | Mit Ehre werden die Besten belohnt
+    .container-lg.mx-auto.my-5
+        .container.d-flex
+            .row
+                .col-8
+                    h3.display-4 Eine Ehrenbank für alle
+                    .fs-5
+                        p Die Erhenbank stellt allen Nutzern mit einem GUARD Account ein Konto zur Verfügung, auf dem sie ihre Ehre sammeln können.
+                            |  Mit Ehre können sie sich in der Community beweisen und sich mit anderen Nutzern messen.
+                        p Mit Ehre können sie sich auch in den Shops Gegenstände kaufen, die dann in ihrem Inventar gespeichert werden.
+                .col-4.float-end.mb-3
+                    .rounded(style='overflow:hidden')
+                        img.rounded(src='https://www.tagesschau.de/multimedia/bilder/bank-of-england-117~_v-original.jpg', alt='Bank of England', style='height:100%;width:540px;background-position: center center;background-size: cover;margin-left:50%;transform: translateX(-50%);')
+                .col-lg-8.col-md-12
+                    h3.display-5 Wie kann ich Ehre bekommen?
+                    p.fs-5 Apps können Ehre an ihre Nutzer verteilen. Du kannst Ehre auch durch das Erledigen von Aufgaben erhalten.
+                .col-lg-4.col-md-12.text-lg-center
+                    h3.display-5 Werde einer von bereits #{usercount || 0} Nutzern
 
-            hr
-            figure.text-center
-                blockquote.blockquote
-                    p
-                        | "Ehre ist die einzige Währung, die nicht an Wert verliert."
-                    footer.blockquote-footer
-                        cite
-                            | Christine Lagarde (2019)
+        hr
+        figure.text-center
+            blockquote.blockquote
+                p
+                    | "Ehre ist die einzige Währung, die nicht an Wert verliert."
+                footer.blockquote-footer
+                    cite
+                        | Christine Lagarde (2019)

@@ -114,7 +114,7 @@ function balance() {
             addUserBalance(req.temp.appid,req.temp.uuid, add,description).then(balance => {
                 res.status(200).json({balance:balance})
             })
-        }else {
+        } else {
             res.status(400).json({error: 'Fehlender Parameter!'})
         }
     })

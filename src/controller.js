@@ -1,5 +1,5 @@
 import request from "request";
-import {createOrUpdateUser, getUserCount, getUserInfo, getUserTransactions} from "./db/db.js";
+import {createOrUpdateUser, getAppInfo, getApps, getUserCount, getUserInfo, getUserTransactions} from "./db/db.js";
 
 function errorHandler() {
     return function (err, req, res, next) {
@@ -23,7 +23,9 @@ export function login(req, res) {
 export function dashboard(req, res) {
     if (isLoggedIn(req)) {
         getUserInfo(req.session.uuid).then(user => {
-                res.render('dashboard', {user: user})
+            getUserTransactions(req.session.uuid,2).then(transactionlist => {
+                res.render('dashboard', {user: user,transactions:transactionlist})
+            })
             }
         ).catch(errorHandler)
     } else {
@@ -95,6 +97,25 @@ export function transactions(req, res) {
                 })
             }
         ).catch(errorHandler)
+    } else {
+        res.redirect('/login')
+    }
+}
+
+export function apps(req, res) {
+    if (isLoggedIn(req)) {
+        getApps().then(async appids => {
+            apps = []
+            for (let appid of appids) {
+                await getAppInfo(appid).then(app => {
+                    apps.push(app)
+                })
+            }
+            getUserInfo(req.session.uuid).then(user => {
+                    res.render('apps', {user: user, apps: apps})
+                }
+            ).catch(errorHandler)
+        }).catch(errorHandler)
     } else {
         res.redirect('/login')
     }

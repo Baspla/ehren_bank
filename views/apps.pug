@@ -1,0 +1,22 @@
+extends includes/base
+block scripts
+block content
+    .text-center.px-4.py-5.text-white.bg-primary
+        h2.display-6.fw-bold
+            | Apps mit Ehrenbank-Integration
+        p.lead
+            | Hier kannst du Punkte bekommen und Items kaufen.
+    .container.mt-4
+        if apps
+            for app in apps
+                .card.mt-3
+                    .card-header
+                        h5.card-title(title=app.appid) #{app.name}
+                    .card-body
+                        p.card-text #{app.description}
+                    .card-footer.text-muted.flex-row.d-flex
+                        a(href = app.url).btn.btn-outline-secondary Zur App
+        else
+            .card.mt-3
+                .card-body
+                    p.card-text Keine Apps vorhanden

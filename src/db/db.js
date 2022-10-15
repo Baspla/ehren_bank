@@ -112,6 +112,14 @@ export async function createApp(appid, name, description, url, permissions) {
     ])
 }
 
+export async function getUserTransactions(uuid, limit = -1, offset = 0) {
+    return rc.zRange('cash:user:' + uuid + ':transactions', offset, limit, {REV:true}).then((transactions) => {
+        return transactions.map((transaction) => {
+            return JSON.parse(transaction)
+        })
+    })
+}
+
 export async function getAppInfo(appid) {
     let appData = rc.hGetAll('cash:app:' + appid);
     return appData.then(values => {

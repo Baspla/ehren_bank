@@ -1,5 +1,5 @@
 import request from "request";
-import {createOrUpdateUser, getUserCount, getUserInfo} from "./db/db.js";
+import {createOrUpdateUser, getUserCount, getUserInfo, getUserTransactions} from "./db/db.js";
 
 function errorHandler() {
     return function (err, req, res, next) {
@@ -7,6 +7,7 @@ function errorHandler() {
         res.render('error', {error: err})
     }
 }
+
 function isLoggedIn(req) {
     return req.session.uuid !== undefined
 }
@@ -22,7 +23,7 @@ export function login(req, res) {
 export function dashboard(req, res) {
     if (isLoggedIn(req)) {
         getUserInfo(req.session.uuid).then(user => {
-                res.render('dashboard', {user: user, hour: new Date().getHours()})
+                res.render('dashboard', {user: user})
             }
         ).catch(errorHandler)
     } else {
@@ -35,7 +36,7 @@ export function index(req, res) {
     getUserCount().then(count => {
         if (isLoggedIn(req)) {
             getUserInfo(req.session.uuid).then(user => {
-                res.render('index', {usercount: count, user: user, hour: new Date().getHours()})
+                res.render('index', {usercount: count, user: user})
             }).catch(errorHandler)
         } else {
             res.render('index', {usercount: count})
@@ -67,7 +68,7 @@ export function callback(req, res) {
 export function shop(req, res) {
     if (isLoggedIn(req)) {
         getUserInfo(req.session.uuid).then(user => {
-                res.render('shop', {user: user, hour: new Date().getHours()})
+                res.render('shop', {user: user})
             }
         ).catch(errorHandler)
     } else {
@@ -78,7 +79,7 @@ export function shop(req, res) {
 export function items(req, res) {
     if (isLoggedIn(req)) {
         getUserInfo(req.session.uuid).then(user => {
-                res.render('items', {user: user, hour: new Date().getHours()})
+                res.render('items', {user: user})
             }
         ).catch(errorHandler)
     } else {
@@ -89,7 +90,9 @@ export function items(req, res) {
 export function transactions(req, res) {
     if (isLoggedIn(req)) {
         getUserInfo(req.session.uuid).then(user => {
-                res.render('transactions', {user: user, hour: new Date().getHours()})
+                getUserTransactions(req.session.uuid).then(transactionlist => {
+                    res.render('transactions', {user: user, transactions:transactionlist})
+                })
             }
         ).catch(errorHandler)
     } else {
@@ -100,7 +103,7 @@ export function transactions(req, res) {
 export function transfer(req, res) {
     if (isLoggedIn(req)) {
         getUserInfo(req.session.uuid).then(user => {
-                res.render('transfer', {user: user, hour: new Date().getHours()})
+                res.render('transfer', {user: user})
             }
         ).catch(errorHandler)
     } else {

@@ -1,8 +1,38 @@
 include includes/base
     block scripts
     block content
-        .text-center.px-4.py-5.bg-success.text-white
+        .text-center.px-4.py-5.bg-primary.text-white
             h2.display-6.fw-bold
-                | Work in Progress
+                | Transaktionen
             p.lead
-                | Diese Seite befindet sich noch im Aufbau.
+                | Hier siehst du alle deine Transaktionen
+        .container.mx-auto.my-5
+            ul.list-group
+                if transactions
+                    - let finalBalance = user.balance
+                    - let runningTotal = finalBalance
+                    for transaction in transactions
+                        li.list-group-item
+                            .d-flex.w-100.justify-content-between
+                                if transaction.amount > 0
+                                    h5.mb-1.text-success(title='Neuer Kontostand: '+runningTotal)
+                                        | +#{transaction.amount} Ehre
+                                else
+                                    h5.mb-1.text-danger(title='Neuer Kontostand: '+runningTotal)
+                                        | #{transaction.amount} Ehre
+                                small.text-muted.text-end(title='Am '+new Date(parseInt(transaction.date)).toLocaleString('de-DE')+'\ndurch '+transaction.appid)
+                                    | #{new Date(parseInt(transaction.date)).toLocaleDateString("de-DE")}
+                            .d-flex.w-100.justify-content-between
+                                span #{transaction.description}
+                        - runningTotal -= transaction.amount
+                else
+                    li.list-group-item
+                        .d-flex.w-100.justify-content-between
+                            h5.mb-1.text-muted
+                                | Keine Transaktionen vorhanden
+            p.text-center.mt-3
+                small.text-muted.text-center
+                    | Letzte Aktualisierung: #{new Date().toLocaleString("de-DE")}
+    script
+        | const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        | const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))

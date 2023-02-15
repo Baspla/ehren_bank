@@ -1,4 +1,4 @@
-import {createApp, startDB} from "../db.js";
+/*import {createApp, startDB} from "../db.js";
 import * as redis from "redis";
 const rc = redis.createClient({
     socket: {
@@ -23,4 +23,4 @@ startDB().then(() => {
 
 createApp("testappid","Test App", "A game that is pay2win", "http://localhost",0).then(value => {
     console.log(value);
-})
+})*/

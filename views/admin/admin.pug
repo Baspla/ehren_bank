@@ -1,0 +1,54 @@
+extends ../includes/base
+block content
+    .text-center.px-4.py-5.text-white.bg-primary
+        h2.display-6.fw-bold
+            | Admin
+        p.lead
+            | Hier kannst du die Ehrenbank verwalten.
+    .container.mt-4
+        .card.mb-4
+            .card-header
+                h5.card-title
+                    | Werbung
+            .card-body
+                .card-text
+                    p Hier kannst du Werbung auf der Startseite verwalten.
+                    a(href="/promotions").btn.btn-primary Werbungen verwalten
+        .card.mb-4
+            .card-header
+                h5.card-title
+                    | Apps
+            .card-body
+                .card-text
+                    .btn-group
+                        a(href="/registerapp").btn.btn-success Registrieren
+                        a(href="/deleteapp").btn.btn-danger Löschen
+        .card.mb-4
+            .card-header
+                h5.card-title
+                    | Benutzer
+            .card-body
+                .card-text
+                    if !users || users.length === 0
+                        p Es sind keine Benutzer vorhanden.
+                    else
+                        p Hier ist eine Tabellenansicht aller Benutzer.
+                        table.table.table-striped.table-hover
+                            thead
+                                tr
+                                    th(scope="col") User-ID
+                                    th(scope="col") Displayname
+                                    th(scope="col") Ehre
+                                    th(scope="col") Guard-ID
+                                    th(scope="col") Erstellt
+                                    th(scope="col") Zuletzt angemeldet
+                            tbody
+                                each u in users
+                                    tr
+                                        td(scope="row")= u.user_id
+                                        td= u.displayname
+                                        td= u.balance
+                                        td
+                                            code.text-success=u.guard_id
+                                        td= new Date(u.created_at).toLocaleString("de-DE")
+                                        td= new Date(u.last_login).toLocaleString("de-DE")

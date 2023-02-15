@@ -15,9 +15,11 @@ import {
     transfer,
     apps,
     postTransfer,
-    developers
+    developers, isLoggedIn, makeadmin, promotions, registerApp, admin, unknownPage, logout, postMakeadmin, debug
 } from "./controller.js";
 import {restapi} from "./restapi.js";
+import {isAdmin} from "./db/admin.js";
+import {deleteApp} from "./db/app.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -53,12 +55,9 @@ webapp.get('/', index)
 
 webapp.get('/dashboard', dashboard)
 
-webapp.get('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-})
+webapp.get('/logout', logout)
 
-webapp.get('/developers',developers)
+webapp.get('/developers', developers)
 
 webapp.get('/login', login)
 
@@ -75,13 +74,21 @@ webapp.post('/transfer', postTransfer)
 
 webapp.get('/apps', apps)
 
-webapp.get('/registerapp', (req, res) => {
-    res.render('admin/registerapp')
-})
 
-webapp.get('/deleteapp', (req, res) => {
-    res.render('admin/deleteapp')
-})
+const adminRouter = express.Router()
+adminRouter.get('/', admin)
+adminRouter.get('/registerapp', registerApp)
+adminRouter.get('/deleteapp', deleteApp)
+adminRouter.get('/promotions', promotions)
+
+webapp.use('/admin', checkIsAdmin, adminRouter)
+
+webapp.get('/makeadmin', makeadmin)
+webapp.post('/makeadmin', postMakeadmin)
+
+webapp.get('/debug', debug)
+
+webapp.get('*', unknownPage)
 
 
 async function start() {
@@ -91,6 +98,20 @@ async function start() {
             console.log(`Express wurde gestartet.`)
         );
     })
+}
+
+function checkIsAdmin(req, res, next) {
+    if (isLoggedIn(req)) {
+        isAdmin(req.session.user_id).then(isAdmin => {
+            if (isAdmin) {
+                next()
+            } else {
+                res.redirect('/')
+            }
+        })
+    } else {
+        res.redirect('/login?returnURL=' + encodeURIComponent('/admin'))
+    }
 }
 
 start().then(() => {

@@ -1,4 +1,5 @@
 import sql from "./db.js";
+import e from "express";
 
 export function setupTransactions() {
     console.log("Erstelle Tabelle 'transactions'...")
@@ -24,7 +25,8 @@ export function setupTransactions() {
 export function transactionExists(transactionID) {
     return sql`SELECT COUNT(*) FROM transactions WHERE transaction_id = ${transactionID}`;
 }
-export function createTransaction( userID, senderID, recipientID, appID, amount, description) {
+
+export function createTransaction(userID, senderID, recipientID, appID, amount, description) {
     console.log("Erstelle Transaktion...")
     console.log(userID, senderID, recipientID, appID, amount, description)
     return Promise.resolve(sql`INSERT INTO transactions (user_id, sender_id, recipient_id, app_id, amount, description, timestamp) VALUES (${userID}, ${senderID}, ${recipientID}, ${appID}, ${amount}, ${description}, NOW())`);
@@ -45,6 +47,19 @@ export function getTransactionInfo(transactionID) {
 export function getTransactionCount() {
     return sql`SELECT COUNT(*) FROM transactions`;
 }
+
+export function getTransactionCountByUser(user_id) {
+    return sql`SELECT COUNT(*) FROM transactions WHERE user_id = ${user_id}`.then(result => {
+        if (result.length > 0) {
+            return result[0].count;
+        } else {
+            return null;
+        }
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 
 export function getTransactionList() {
     return sql`SELECT * FROM transactions`;

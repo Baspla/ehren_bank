@@ -1,7 +1,13 @@
 import sql from "./db.js";
 
 export function isAdmin(userid) {
-    return sql`SELECT is_admin FROM users WHERE user_id = ${userid}`;
+    return sql`SELECT is_admin FROM users WHERE user_id = ${userid}`.then(result => {
+        if (result.length > 0) {
+            return result[0].is_admin;
+        } else {
+            return false;
+        }
+    })
 }
 
 export function makeAdmin(userid) {

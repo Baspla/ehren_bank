@@ -45,6 +45,18 @@ export function getItemCount() {
     return sql`SELECT COUNT(*) FROM items`;
 }
 
+export function getItemCountByUser(user_id) {
+    return sql`SELECT COUNT(*) FROM items WHERE user_id = ${user_id}`.then(result => {
+        if (result.length > 0) {
+            return result[0].count;
+        } else {
+            return null;
+        }
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
 export function getItemList() {
     return sql`SELECT * FROM items`;
 }

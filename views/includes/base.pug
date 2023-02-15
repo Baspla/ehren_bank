@@ -26,10 +26,16 @@ html
                                 li.nav-item
                                     a.nav-link.active Angemeldet als #{user.displayname}
                                 li.nav-item
+                                    //if path
+                                    //    a.btn.btn-outline-secondary(href='/logout?returnURL=' + encodeURIComponent(path)) Abmelden
+                                    //else
                                     a.btn.btn-outline-secondary(href='/logout') Abmelden
                             else
                                 li.nav-item
-                                    a.btn.btn-outline-secondary(href='/login') Anmelden
+                                    if path
+                                        a.btn.btn-outline-secondary(href='/login?returnURL='+encodeURIComponent(path)) Anmelden
+                                    else
+                                        a.btn.btn-outline-secondary(href='/login') Anmelden
             block content
                 | Kein Inhalt vorhanden
             block footer

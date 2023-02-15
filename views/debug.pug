@@ -1,0 +1,28 @@
+extends includes/base
+block content
+    .text-center.px-4.py-5.bg-secondary
+        h2.display-6.fw-bold
+            | Debug
+        p.lead
+            | Hilfreiche Informationen für Entwickler
+    .container.mt-4
+        .card.mb-4
+            .card-header
+                h5.card-title Nutzerdaten
+            .card-body
+                ul.list-group.list-group-flush
+                    li.list-group-item
+                        | Displayname - #{user.displayname}
+                    li.list-group-item
+                        | Ehre - #{user.balance}
+                    li.list-group-item
+                        | Guard ID - #{user.guard_id}
+                    li.list-group-item
+                        | User ID - #{user.user_id}
+                    li.list-group-item
+                        | Transaktionen - #{count_transactions}
+                    li.list-group-item
+                        | Items - #{count_items}
+                    if is_admin
+                        li.list-group-item.text-success
+                            | Du bist Admin

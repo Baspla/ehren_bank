@@ -1,0 +1,174 @@
+extends includes/base
+block content
+    .text-center.px-4.py-5.bg-primary.text-white
+        h2.display-6
+            | Entwicklerbereich
+        p.lead
+            | Hier findest du alle Informationen für Entwickler
+    .container.mx-auto.my-5
+        .text-center.px-4.py-4.bg-danger.text-white.rounded.mb-3
+            h2.display-6
+                | Wichtig!
+            p.lead
+                | Diese Dokumentation wurde automatisch generiert und entspricht teilweise nicht der aktuellen Version.
+        h2
+            | App registrieren
+        p.lead
+            | Um eine App zu registrieren, musst du dich zuerst bei einem Admin melden.
+            | Dieser wird dir dann einen API-Token für deine App geben.
+            | Dieser Token ist notwendig, um die REST-API zu nutzen.
+        h3
+            | Berechtigungen
+        p.lead
+            | Diese werden in der REST-API verwendet, um zu prüfen, ob die App die entsprechende Berechtigung hat.
+        p.lead
+            | Es gibt folgende Berechtigungen:
+        ul.list-group.mb-3
+            li.list-group-item
+                .badge.bg-success.me-2
+                    | Ehre
+                | Ermöglicht die Verwendung von Ehre
+            li.list-group-item
+                .badge.bg-info.me-2
+                    | Items
+                | Ermöglicht die Verwendung von Items
+            li.list-group-item
+                .badge.bg-warning.me-2
+                    | Shops
+                | Ermöglicht die Verwendung von Shops
+        // REST-API
+        h2
+            | REST-API
+        p
+            | Durch die REST-API können Apps auf die Ehrenbank zugreifen.
+            | Die API ist in verschiedene Bereiche aufgeteilt.
+            | Jeder Bereich hat eine eigene URL.
+        h3
+            | Authentifizierung
+        p
+            | Um die API zu nutzen, muss der API-Token in den HTTP-Header gesetzt werden.
+            | Dieser muss in der Form
+            pre
+                | Bearer {API-Token}
+            | immer als Header mitgesendet werden.
+        h3
+            | Fehlercodes
+        p
+            | Die API gibt folgende Fehlercodes zurück:
+        ul.list-group.mb-3
+            li.list-group-item
+                .badge.bg-danger.me-2
+                    | 401
+                | Ungültiger API-Token
+            li.list-group-item
+                .badge.bg-danger.me-2
+                    | 403
+                | Ungültige Berechtigung
+            li.list-group-item
+                .badge.bg-danger.me-2
+                    | 404
+                | Nicht gefunden
+            li.list-group-item
+                .badge.bg-danger.me-2
+                    | 500
+                | Interner Serverfehler
+        h3
+            | Endpunkte
+        hr
+        h4.fw-bold
+            | User
+        h5
+            | GET /api/v1/user
+        p
+            | Gibt alle Benutzer zurück.
+        h5
+            | GET /api/v1/user/:guard_id
+        p
+            | Gibt den Benutzer
+            |
+            spananhand seiner Guard ID
+            | zurück.
+        h5
+            | GET /api/v1/user/:guard_id/balance
+        p
+            | Gibt den aktuellen Kontostand des Benutzers anhand seiner Guard ID zurück.
+        h5
+            | PATCH /api/v1/user/:guard_id/balance
+        p
+            | Ändert den Kontostand des Benutzers.
+            | Hierbei kann nur Ehre hinzugefügt werden.
+        h5
+            | GET /api/v1/user/:guard_id/items
+        p
+            | Gibt alle Items des Benutzers zurück.
+        h5#api-post-item
+            | POST /api/v1/user/:guard_id/items
+        p
+            | Fügt dem Benutzer ein Item hinzu.
+        hr
+        h4.fw-bold
+            | Item
+        h5
+            | GET /api/v1/item
+        p
+            | Gibt alle Items zurück, die durch die App erstellt wurden.
+        h5
+            | GET /api/v1/item/:item_id
+        p
+            | Gibt das Item mit der angegebenen ID zurück.
+        h5
+            | POST /api/v1/item
+            |
+            span.bg-danger.badge Existiert nicht!
+        p
+            | Hierfür gibt es
+            |
+            a(href="/developers#api-post-item") POST /api/v1/user/:guard_id/items
+            | .
+        hr
+        h4.fw-bold
+            | Shop
+        h5
+            | GET /api/v1/shop
+        p
+            | Gibt alle Shops zurück, die durch die App erstellt wurden.
+        h5
+            | GET /api/v1/shop/:shop_id
+        p
+            | Gibt den Shop mit der angegebenen ID zurück.
+        h5
+            | POST /api/v1/shop
+        p
+            | Erstellt einen neuen Shop.
+        h5
+            | PATCH /api/v1/shop/:shop_id
+        p
+            | Ändert einen Shop.
+        h5
+            | DELETE /api/v1/shop/:shop_id
+        p
+            | Löscht einen Shop.
+        hr
+        h4.fw-bold
+            | Coupon
+        h5
+            | GET /api/v1/coupon
+        p
+            | Gibt alle Coupons zurück, die durch die App erstellt wurden.
+        h5
+            | GET /api/v1/coupon/:coupon_id
+        p
+            | Gibt den Coupon mit der angegebenen ID zurück.
+        h5
+            | POST /api/v1/coupon
+        p
+            | Erstellt einen neuen Coupon.
+        h5
+            | PATCH /api/v1/coupon/:coupon_id
+        p
+            | Ändert einen Coupon.
+        h5
+            | DELETE /api/v1/coupon/:coupon_id
+        p
+            | Löscht einen Coupon.
+

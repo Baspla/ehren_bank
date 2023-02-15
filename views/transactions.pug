@@ -1,5 +1,4 @@
 extends includes/base
-block scripts
 block content
     .text-center.px-4.py-5.bg-primary.text-white
         h2.display-6.fw-bold
@@ -20,10 +19,11 @@ block content
                             else
                                 h5.mb-1.text-danger(title='Neuer Kontostand: '+runningTotal)
                                     | #{transaction.amount} Ehre
-                            small.text-muted.text-end(title='Am '+new Date(parseInt(transaction.date)).toLocaleString('de-DE')+'\ndurch '+transaction.appid)
-                                | #{new Date(parseInt(transaction.date)).toLocaleDateString("de-DE")}
+                            small.text-muted.text-end(title=new Date(transaction.timestamp).toLocaleString('de-DE'))
+                                | #{new Date(transaction.timestamp).toLocaleDateString("de-DE")}
                         .d-flex.w-100.justify-content-between
                             span #{transaction.description}
+                            span(title=transaction.appid) #{transaction.name}
                     - runningTotal -= transaction.amount
             else
                 li.list-group-item

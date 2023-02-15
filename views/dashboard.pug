@@ -5,7 +5,7 @@ block content
             | Willkommen auf der Ehrenbank
         p.lead
             include includes/greeting
-        p Du bist seit #{new Date(user.created).toLocaleDateString("de-DE")} dabei.
+        p Du bist seit #{new Date(user.created_at).toLocaleDateString("de-DE")} dabei.
     .container.mx-auto.my-5
         .card
             img.card-img-top(src='https://as2.ftcdn.net/v2/jpg/03/30/59/79/1000_F_330597957_u2ohf3DLB7FAj5FlwIBNGE4TjEnPcceN.jpg', alt='Konto Banner', style='height: 200px; object-fit: cover;')
@@ -14,8 +14,7 @@ block content
                 h5.fs-4.card-subtitle.text-muted
                     | #{user.balance} Ehre
             .card-footer.text-end
-                a.btn.btn-outline-secondary.me-2(href='/transactions') Transaktionen
-                a.btn.btn-primary.me-2(href='/transfer') Überweisung tätigen
+                            a.btn.btn-primary.me-2(href='/transfer') Überweisung tätigen
         .row.row-cols-2.gx-4.my-4
             .col
                 .card.h-100
@@ -25,32 +24,54 @@ block content
                         if transactions && transactions.length > 0
                             - let finalBalance = user.balance
                             - let runningTotal = finalBalance
-                            for transaction in transactions
-                                .d-flex.w-100.justify-content-between
-                                    if transaction.amount > 0
-                                        h5.mb-1.text-success(title='Neuer Kontostand: ' + runningTotal)
-                                            | +#{transaction.amount} Ehre
-                                    else
-                                        h5.mb-1.text-danger(title='Neuer Kontostand: ' + runningTotal)
-                                            | #{transaction.amount} Ehre
-                                    small.text-muted.text-end(title='Am ' + new Date(parseInt(transaction.date)).toLocaleString('de-DE') + '\ndurch ' + transaction.appid)
-                                        | #{new Date(parseInt(transaction.date)).toLocaleDateString("de-DE")}
-                                .d-flex.w-100.justify-content-between
-                                    span #{transaction.description}
-                                hr
-                            .text-center.mb-1.py-2.text-secondary
-                                svg(xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16")
-                                    path(d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z")
-                                    path(d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z")
+                            for transaction, index in transactions
+                                if(index<3)
+                                    .d-flex.w-100.justify-content-between
+                                        if transaction.amount > 0
+                                            h5.mb-1.text-success(title='Neuer Kontostand: ' + runningTotal)
+                                                | +#{transaction.amount} Ehre
+                                        else
+                                            h5.mb-1.text-danger(title='Neuer Kontostand: ' + runningTotal)
+                                                | #{transaction.amount} Ehre
+                                        small.text-muted.text-end(title=new Date(transaction.timestamp).toLocaleString('de-DE'))
+                                            | #{new Date(transaction.timestamp).toLocaleDateString("de-DE")}
+                                    .d-flex.w-100.justify-content-between
+                                        span #{transaction.description}
+                                    hr
+                            if transactions.length > 3
+                                .text-center.mb-1.py-2.text-secondary
+                                    svg(xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16")
+                                        path(d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z")
+                                        path(d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z")
                             p.text-center.mt-3
                                 small.text-muted.text-center
                                     | Letzte Aktualisierung: #{new Date().toLocaleString("de-DE")}
                         else
                             p.text-center.mt-3 Keine Transaktionen vorhanden
+                    .card-footer.text-end
+                        a.btn.btn-outline-secondary.me-2(href='/transactions') Alle Transaktionen
             .col
-                .card.text-white(style='background: rgb(52,12,190);background: linear-gradient(90deg, rgba(52,12,190,1) 0%, rgba(0,153,184,1) 100%);')
+                .card.mb-4
+                    .card-body
+                        h5.card-title Überweisung
+                        p.card-text
+                            | Wollen Sie jemandem Ehre schenken? Dann sind Sie hier genau richtig!
+                        a.btn.btn-outline-success(href='/transfer') Überweisung tätigen
+                .card.mb-4
+                    .card-body
+                        h5.card-title Du bist Entwickler?
+                        p.card-text
+                            | Du kannst deine eigene App mit der Ehrenbank verbinden!
+                            | So kannst du deine Nutzer mit Ehre belohnen oder Gegenstände im Shop anbieten.
+                            | Andere Apps, die schon mit der Ehrenbank verbunden sind, findest du
+                            |
+                            a(href='/apps').link-success hier
+                            | .
+                        a.btn.btn-outline-primary(href='/developers') Entwicklerbereich
+                .card.mb-4.text-white(style='background: rgb(52,12,190);background: linear-gradient(90deg, rgba(52,12,190,1) 0%, rgba(0,153,184,1) 100%);')
                     .card-body
                         h5.card-title Werbung
                         p.card-text
                             | Gewinne Ehre, indem du bei Quill and Dagger mitmachst!
                         a.btn.btn-outline-light(href='http://185.205.244.175:5000', target='_blank') Quill and Dagger
+

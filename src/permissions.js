@@ -1,3 +1,4 @@
+
 export const permissions = {
     BALANCE: 0,
     ITEMS: 1,

@@ -1,0 +1,8 @@
+.card.mb-4
+    img.card-img-top(src='https://t3.ftcdn.net/jpg/03/30/59/80/360_F_330598072_bfGsKx2FwarpI3kJvcVD8Q8UxNmXj1UB.jpg', alt='Konto Banner', style='height: 200px; object-fit:  cover; object-position: right 75%')
+    .card-body
+        h4.fs-2.card-title Dein Konto
+        h5.fs-4.card-subtitle.text-muted
+            | #{user.balance} Ehre
+    .card-footer.text-end
+        a.btn.btn-outline-success(href='/transfer') Überweisung tätigen

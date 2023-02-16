@@ -1,9 +1,13 @@
-extends includes/base
+extends extends/hero
+block title
+    | Uups!
+block subtitle
+    | Da ist ein Fucky-Wucky passiert!
 block content
-    .text-center.px-4.py-5.text-white.bg-primary
-        h2.display-6.fw-bold
-            | 404
-        p.lead
-            | Die angeforderte Seite konnte nicht gefunden werden.
-    .container.mt-4
-        a(href="/").btn.btn-outline-primary Zurück zur Startseite
+    .container
+        .row
+            .col-12
+                .text-center
+                    h1.display-1 404
+                    p.lead Die angeforderte Seite konnte nicht gefunden werden.
+                    a.btn.btn-primary(href="/") Zur Startseite

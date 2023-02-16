@@ -18,6 +18,7 @@ import {
 import {
     setupShops
 } from "./shop.js";
+import {setupPromotions} from "./promotion.js";
 
 const sql = postgres({
     host: process.env.DB_HOST,
@@ -39,6 +40,7 @@ export async function setupDatabase() {
     await setupItems();
     await setupShops();
     await setupCoupons();
+    await setupPromotions();
     console.log("Datenbank eingerichtet!")
 
 }

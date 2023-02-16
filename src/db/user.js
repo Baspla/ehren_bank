@@ -31,12 +31,21 @@ export function getUserIDFromGuardID(guardid) {
 }
 
 export function getUserInfo(userid) {
+    return sql`SELECT * FROM users WHERE user_id = ${userid}`.then(result => {
+        if(result.length === 0)
+            return null;
+        return result[0];
+    })
+}
+
+export function getLimitedUserInfo(userid) {
     return sql`SELECT user_id, guard_id, displayname,created_at, last_login, balance FROM users WHERE user_id = ${userid}`.then(result => {
         if(result.length === 0)
             return null;
         return result[0];
     })
 }
+
 export function getUserCount() {
     return sql`SELECT COUNT(*) FROM users`.then(result => {
         if(result.length === 0)

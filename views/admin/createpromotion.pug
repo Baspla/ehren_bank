@@ -1,0 +1,29 @@
+extends ../extends/base
+block content
+    .text-center.px-4.py-5.text-white.bg-primary
+        h2.display-6.fw-bold
+            | Promotion erstellen
+        p.lead
+            | Erstelle eine neue Promotion
+    .container.mt-4
+        form(action="/admin/promotions/create" method="post").col-12.mb-4
+            .mb-3
+                label.form-label(for="name") Name
+                input.form-control(type="text" name="name" id="name" placeholder="Name" required)
+            .mb-3
+                label.form-label(for="description") Beschreibung
+                input.form-control(type="text" name="description" id="description" placeholder="Beschreibung" required)
+            .mb-3
+                label.form-label(for="url") URL
+                input.form-control(type="url" name="url" id="url" placeholder="URL")
+            .mb-3
+                label.form-label(for="image_url") Bild URL
+                input.form-control(type="url" name="image_url" id="image_url" placeholder="Bild URL")
+            .mb-3
+                label.form-label(for="color_left") Farbe links
+                input.form-control(type="color" name="color_left" id="color_left" placeholder="Farbe links" required)
+            .mb-3
+                label.form-label(for="color_right") Farbe rechts
+                input.form-control(type="color" name="color_right" id="color_right" placeholder="Farbe rechts" required)
+            .mb-3
+                button.btn.btn-outline-primary(type="submit") Erstellen

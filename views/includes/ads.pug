@@ -1,0 +1,12 @@
+if promotions && promotions.length > 0
+    - let promotion_index = Math.floor(Math.random() * promotions.length)
+    - let promotion = promotions[promotion_index]
+    .card.mb-4.text-white.border-light.rounded-3(style='background: ' + promotion.color_right + '};background: linear-gradient(90deg, ' + promotion.color_left + ' 0%, ' + promotion.color_right + ' 100%);')
+        if promotion.image_url
+            img.img-fluid.card-img-top(src=promotion.image_url alt="Promotion Image")
+        .card-body
+            h5.card-title #{promotion.name}
+            p.card-text
+                | #{promotion.description}
+            if promotion.url
+                a.btn.btn-outline-light.text-end(href=promotion.url) Zur Webseite

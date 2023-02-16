@@ -1,0 +1,33 @@
+extends ../../extends/hero
+block title
+    | Apps
+block subtitle
+    | Hier kannst du alle Apps verwalten.
+block content
+    .container.mt-4
+        .mb-4
+            if apps
+                for app in apps
+                    .card.mt-3
+                        .card-header
+                            h5.card-title(title="App ID " + app.app_id) #{app.name}
+                            if app.permissions >> 0 & 1 === 1
+                                span.badge.badge-pill.bg-primary.me-1 Ehre
+                            if app.permissions >> 1 & 1 === 1
+                                span.badge.badge-pill.bg-primary.me-1 Items
+                            if app.permissions >> 2 & 1 === 1
+                                span.badge.badge-pill.bg-primary.me-1 Shop
+                        .card-body
+                            p.card-text #{app.description}
+                        .card-footer.text-muted.flex-row.d-flex.justify-content-between
+                            a(href = app.url).btn.btn-outline-secondary Website
+                            .btn-group
+                                a(href = "/admin/apps/" + app.app_id).btn.btn-primary Info
+                                a(href = "/admin/apps/" + app.app_id+"/edit").btn.btn-warning Bearbeiten
+                                a(href = "/admin/apps/" + app.app_id+"/delete" ).btn.btn-danger Löschen
+            else
+                .card.mt-3
+                    .card-body
+                        p.card-text Keine Apps vorhanden
+
+        a.btn.btn-primary(href="/admin/apps/create").col-12.mb-4 Neue App erstellen

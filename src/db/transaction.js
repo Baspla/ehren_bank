@@ -62,35 +62,35 @@ export function getTransactionCountByUser(user_id) {
 
 
 export function getTransactionList() {
-    return sql`SELECT * FROM transactions`;
+    return sql`SELECT * FROM transactions ORDER BY timestamp DESC`;
 }
 
 export function getTransactionListByUser(userID) {
-    return sql`SELECT * FROM transactions WHERE user_id = ${userID}`;
+    return sql`SELECT * FROM transactions WHERE user_id = ${userID} ORDER BY timestamp DESC`;
 }
 
 export function getTransactionListBySender(senderID) {
-    return sql`SELECT * FROM transactions WHERE sender_id = ${senderID}`;
+    return sql`SELECT * FROM transactions WHERE sender_id = ${senderID} ORDER BY timestamp DESC`;
 }
 
 export function getTransactionListByRecipient(recipientID) {
-    return sql`SELECT * FROM transactions WHERE recipient_id = ${recipientID}`;
+    return sql`SELECT * FROM transactions WHERE recipient_id = ${recipientID} ORDER BY timestamp DESC`;
 }
 
 export function getTransactionListByApp(appID) {
-    return sql`SELECT * FROM transactions WHERE app_id = ${appID}`;
+    return sql`SELECT * FROM transactions WHERE app_id = ${appID} ORDER BY timestamp DESC`;
 }
 
 export function getTransactionListBySenderAndRecipient(senderID, recipientID) {
-    return sql`SELECT * FROM transactions WHERE sender_id = ${senderID} AND recipient_id = ${recipientID}`;
+    return sql`SELECT * FROM transactions WHERE sender_id = ${senderID} AND recipient_id = ${recipientID} ORDER BY timestamp DESC`;
 }
 
 export function getTransactionListBySenderAndApp(senderID, appID) {
-    return sql`SELECT * FROM transactions WHERE sender_id = ${senderID} AND app_id = ${appID}`;
+    return sql`SELECT * FROM transactions WHERE sender_id = ${senderID} AND app_id = ${appID} ORDER BY timestamp DESC`;
 }
 
 export function getTransactionListByRecipientAndApp(recipientID, appID) {
-    return sql`SELECT * FROM transactions WHERE recipient_id = ${recipientID} AND app_id = ${appID}`;
+    return sql`SELECT * FROM transactions WHERE recipient_id = ${recipientID} AND app_id = ${appID} ORDER BY timestamp DESC`;
 }
 
 

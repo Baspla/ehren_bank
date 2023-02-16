@@ -1,0 +1,31 @@
+extends ../../extends/base
+block content
+    .text-center.px-4.py-5.text-white.bg-primary
+        h2.display-6.fw-bold
+            | Neue App Registrieren
+        p.lead
+            | Registriere eine neue App um die Ehren Credit System API zu nutzen.
+    .container.mt-4
+        form(action="/admin/apps/create", method="POST")
+            label.form-label(for="display") Anzeigename
+            input.form-control.mb-3#display(name="name",placeholder="Anzeigename der App", type="text" required)
+            label.form-label(for="desc") Beschreibung
+            input.form-control.mb-3#desc(name="description",placeholder="Beschreibung der App", type="text" required)
+            label.form-label(for="desc") URL
+            input.form-control.mb-3#url(name="url",placeholder="URL der App", type="text" required)
+            .card.mb-3
+                .card-header
+                    h5.card-title Berechtigungen
+                .card-body
+                    p.card-text
+                        | Wähle die Berechtigungen aus, die die App benötigt.
+                    .form-check
+                        input.form-check-input#permissionsBalance(name="permissionsBalance", type="checkbox", value="true")
+                        label.form-check-label(for="permissionsBalance") Ehre
+                    .form-check
+                        input.form-check-input#permissionsItems(name="permissionsItems", type="checkbox", value="true")
+                        label.form-check-label(for="permissionsItems") Items
+                    .form-check.mb-3
+                        input.form-check-input#permissionsShop(name="permissionsShop", type="checkbox", value="true")
+                        label.form-check-label(for="permissionsShop") Shop
+            button.btn.btn-warning(type='submit') Registrieren

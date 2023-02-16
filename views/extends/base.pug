@@ -1,11 +1,13 @@
 doctype html
 html
-    include head
+    include ../includes/head
     body
         block main
             nav.navbar.navbar-expand-lg.bg-light
                 .container-fluid.me-auto
                     a.navbar-brand(href='/') Ehrenbank
+                    if process.env.DEBUG
+                        a.badge.bg-danger.me-1.text-white.text-decoration-none(href='/debug') DEBUG
                     button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation')
                         span.navbar-toggler-icon
                     #navbarNav.collapse.navbar-collapse
@@ -21,6 +23,9 @@ html
                                     a.nav-link(href='/apps') Apps
                                 li.nav-item
                                     a.nav-link(href='/developers') Entwickler
+                                if user.is_admin
+                                    li.nav-item
+                                        a.nav-link(href='/admin') Admin
                         ul.navbar-nav.ms-auto
                             if user != null
                                 li.nav-item
@@ -36,6 +41,7 @@ html
                                         a.btn.btn-outline-secondary(href='/login?returnURL='+encodeURIComponent(path)) Anmelden
                                     else
                                         a.btn.btn-outline-secondary(href='/login') Anmelden
+            block precontent
             block content
                 | Kein Inhalt vorhanden
             block footer

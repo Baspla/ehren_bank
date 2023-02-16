@@ -1,6 +1,6 @@
 import express from "express";
 import {permissions} from "./permissions.js";
-import {getUserIDFromGuardID, getUserInfo, getUserList, modifyUserBalance} from "./db/user.js";
+import {getLimitedUserInfo, getUserIDFromGuardID, getUserInfo, getUserList, modifyUserBalance} from "./db/user.js";
 import {getAppIDFromAPIKey, getAppInfo} from "./db/app.js";
 import {createTransaction, getTransactionList} from "./db/transaction.js";
 
@@ -16,7 +16,7 @@ export function restapi() {
         const apikey = req.headers.authorization.split(' ')[1];
         getAppIDFromAPIKey(apikey).then(app_id => {
             if (app_id) {
-                req.temp = {app_id: app_id}
+                req.temp.app_id=app_id
                 next()
             } else {
                 res.status(401).json({error: 'Ungültiger Token!'})
@@ -35,7 +35,7 @@ function appHasPermission(permission) {
     return (req, res, next) => {
         if (req.temp.app_id) {
             getAppInfo(req.temp.app_id).then(app => {
-                if ((app.permissions & 1 >> permission) === 1) {
+                if ((app.permissions >> permission & 1 ) === 1) {
                     next()
                 } else {
                     res.status(403).json({error: 'Keine Berechtigung!'})
@@ -90,7 +90,7 @@ function guard_id() {
         })
     }
     router.get('/', (req, res) => {
-        getUserInfo(req.temp.user_id).then(user => {
+        getLimitedUserInfo(req.temp.user_id).then(user => {
             res.send(user)
         })
     })

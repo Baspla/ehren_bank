@@ -1,0 +1,21 @@
+extends base
+block precontent
+    .text-center.px-4.py-5.text-white.bg-primary
+        h2.display-6.fw-bold
+            block title
+        p.lead
+            block subtitle
+    nav.mx-4.my-3
+        - var breadcrumbs = path.split("/");
+        - var link = "";
+        ol.breadcrumb
+            for crumb,index in breadcrumbs
+                - link += crumb + "/";
+                if index === 0
+                    li.breadcrumb-item
+                        a(href=link).text-decoration-none Home
+                else if index === breadcrumbs.length - 1
+                    li.breadcrumb-item.active.text-capitalize #{crumb}
+                else
+                    li.breadcrumb-item
+                        a(href=link).text-decoration-none.text-capitalize #{crumb}

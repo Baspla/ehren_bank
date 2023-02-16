@@ -5,21 +5,45 @@ import {setupDatabase} from "./db/db.js";
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import {
+    admin,
+    apps,
     callback,
-    index,
-    login,
     dashboard,
-    shop,
+    debug,
+    developers,
+    errorHandler,
+    index,
+    isLoggedIn,
     items,
+    login,
+    logout,
+    makeadmin,
+    postMakeadmin,
+    postTransfer,
+    shop,
     transactions,
     transfer,
-    apps,
-    postTransfer,
-    developers, isLoggedIn, makeadmin, promotions, registerApp, admin, unknownPage, logout, postMakeadmin, debug
-} from "./controller.js";
+    unknownPage
+} from "./controller/controller.js";
 import {restapi} from "./restapi.js";
-import {isAdmin} from "./db/admin.js";
-import {deleteApp} from "./db/app.js";
+import {
+    getApps,
+    getAppsCreate,
+    getAppsDelete,
+    getAppsEdit,
+    getAppsInfo,
+    postAppsCreate,
+    postAppsEdit
+} from "./controller/admin/apps.js";
+import {getUserInfo} from "./db/user.js";
+import {
+    getPromotions,
+    getPromotionsCreate,
+    getPromotionsDelete,
+    getPromotionsEdit,
+    postPromotionsCreate,
+    postPromotionsEdit
+} from "./controller/admin/promotions.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -42,6 +66,10 @@ webapp.use('/favicon.ico', express.static(__dirname + '/../img/favicon.ico'))
 webapp.use('/scripts', express.static(__dirname + '/../scripts'))
 webapp.use(express.json());
 webapp.use(express.urlencoded({extended: true}));
+webapp.use((req, res, next) => {
+    req.temp = {}
+    next()
+})
 //
 // API
 //
@@ -53,43 +81,71 @@ webapp.use('/api/v1', restapi())
 
 webapp.get('/', index)
 
-webapp.get('/dashboard', dashboard)
-
-webapp.get('/logout', logout)
-
-webapp.get('/developers', developers)
-
 webapp.get('/login', login)
-
 webapp.get('/callback', callback)
 
-webapp.get('/shop', shop)
+const userRouter = express.Router()
+userRouter.use(checkIsLoggedIn)
+userRouter.use(annotateUserInformation)
 
-webapp.get('/items', items)
+userRouter.get('/dashboard', dashboard)
 
-webapp.get('/transactions', transactions)
+userRouter.get('/logout', logout)
 
-webapp.get('/transfer', transfer)
-webapp.post('/transfer', postTransfer)
+userRouter.get('/developers', developers)
 
-webapp.get('/apps', apps)
+
+userRouter.get('/shop', shop)
+
+userRouter.get('/items', items)
+
+userRouter.get('/transactions', transactions)
+
+userRouter.get('/transfer', transfer)
+userRouter.post('/transfer', postTransfer)
+
+userRouter.get('/apps', apps)
 
 
 const adminRouter = express.Router()
 adminRouter.get('/', admin)
-adminRouter.get('/registerapp', registerApp)
-adminRouter.get('/deleteapp', deleteApp)
-adminRouter.get('/promotions', promotions)
 
-webapp.use('/admin', checkIsAdmin, adminRouter)
+const appRouter = express.Router()
+appRouter.get('/', getApps)
+appRouter.get('/create', getAppsCreate)
+appRouter.get('/:app_id/', logParams ,getAppsInfo)
+appRouter.get('/:app_id/edit', getAppsEdit)
+appRouter.get('/:app_id/delete', getAppsDelete)
+appRouter.post('/create', postAppsCreate)
+appRouter.post('/:app_id/edit', postAppsEdit)
+adminRouter.use('/apps' ,appRouter)
 
-webapp.get('/makeadmin', makeadmin)
-webapp.post('/makeadmin', postMakeadmin)
 
-webapp.get('/debug', debug)
+const promotionRouter = express.Router()
+promotionRouter.get('/', getPromotions)
+promotionRouter.get('/create', getPromotionsCreate)
+promotionRouter.get('/edit', getPromotionsEdit)
+promotionRouter.get('/delete', getPromotionsDelete)
+promotionRouter.post('/create', postPromotionsCreate)
+promotionRouter.post('/edit', postPromotionsEdit)
+adminRouter.use('/promotions', promotionRouter)
 
+
+userRouter.use('/admin', checkIsAdmin, adminRouter)
+
+userRouter.get('/makeadmin', makeadmin)
+userRouter.post('/makeadmin', postMakeadmin)
+
+userRouter.get('/debug', debug)
+
+webapp.use(userRouter)
 webapp.get('*', unknownPage)
 
+
+
+function logParams(req, res, next) {
+    next()
+}
 
 async function start() {
     await setupDatabase().then(() => {
@@ -100,17 +156,31 @@ async function start() {
     })
 }
 
-function checkIsAdmin(req, res, next) {
+function annotateUserInformation(req, res, next) {
     if (isLoggedIn(req)) {
-        isAdmin(req.session.user_id).then(isAdmin => {
-            if (isAdmin) {
-                next()
-            } else {
-                res.redirect('/')
-            }
-        })
+        getUserInfo(req.session.user_id).then(user => {
+            req.temp.user = user
+            next()
+        }).catch(errorHandler)
     } else {
-        res.redirect('/login?returnURL=' + encodeURIComponent('/admin'))
+        next()
+    }
+}
+
+function checkIsLoggedIn(req, res, next) {
+    if (isLoggedIn(req)) {
+        next()
+    } else {
+        console.log("Redirecting to " + '/login?returnURL=' + encodeURIComponent(req.path))
+        res.redirect('/login?returnURL=' + encodeURIComponent(req.path))
+    }
+}
+
+function checkIsAdmin(req, res, next) {
+    if (req.temp.user.is_admin) {
+        next()
+    } else {
+        res.redirect('/')
     }
 }
 

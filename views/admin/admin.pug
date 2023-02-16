@@ -1,4 +1,4 @@
-extends ../includes/base
+extends ../extends/base
 block content
     .text-center.px-4.py-5.text-white.bg-primary
         h2.display-6.fw-bold
@@ -13,16 +13,15 @@ block content
             .card-body
                 .card-text
                     p Hier kannst du Werbung auf der Startseite verwalten.
-                    a(href="/promotions").btn.btn-primary Werbungen verwalten
+                    a(href="/admin/promotions").btn.btn-primary Werbungen verwalten
         .card.mb-4
             .card-header
                 h5.card-title
                     | Apps
             .card-body
                 .card-text
-                    .btn-group
-                        a(href="/registerapp").btn.btn-success Registrieren
-                        a(href="/deleteapp").btn.btn-danger Löschen
+                    p Hier kannst du Apps verwalten.
+                    a(href="/admin/apps/").btn.btn-primary Apps
         .card.mb-4
             .card-header
                 h5.card-title

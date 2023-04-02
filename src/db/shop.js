@@ -65,7 +65,7 @@ export function getShopInfo(shopID) {
 
 export function getShopList() {
     return sql`
-        SELECT shops.*, apps.name AS app_name FROM shops JOIN apps ON shops.app_id = apps.app_id WHERE hidden = false ORDER BY shops.app_id, shop_id DESC;
+        SELECT shops.*, apps.name AS app_name FROM shops JOIN apps ON shops.app_id = apps.app_id WHERE shops.hidden = false ORDER BY shops.app_id, shop_id DESC;
     `;
 }
 

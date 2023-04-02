@@ -1,5 +1,5 @@
 import {getShopInfo, getShopList} from "../db/shop.js";
-import {getCouponInfo, getCouponInfoByCode, isCouponValid, updateCouponUsageCount} from "../db/coupon.js";
+import {getCouponInfoByCode, isCouponValid, updateCouponUsageCount} from "../db/coupon.js";
 import {getUserInfo, modifyUserBalance} from "../db/user.js";
 import {createItem} from "../db/item.js";
 import {createTransaction} from "../db/transaction.js";
@@ -104,7 +104,7 @@ export async function processShopCoupon(req, res) {
     if (coupon_code == null || coupon_code === "" || shop_id == null || shop_id === "") {
         res.json({success: false, error: "Invalid request"})
     } else {
-        getCouponInfoByCode(coupon_code).then(coupon => {
+        await getCouponInfoByCode(coupon_code).then(coupon => {
                 if (coupon.length === 0) {
                     res.json({success: false, error: "Coupon not valid"})
                 } else {

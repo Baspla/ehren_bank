@@ -11,24 +11,25 @@ block content
     .container
         if shop
             .row-cols-2.row
-                .col-6
-                    if shop.image
-                        img.img-fluid.rounded.mb-2(src=shop.image, alt='Shopbild', style='height: 250px;')
-                    h1 #{shop.name}
-                    if shop.price
-                        h5.card-text.mb-4
-                            span.text-muted Preis:
-                                |
-                                |
-                            span #{shop.price} Ehre
-                    if shop.description
-                        p #{shop.description}
-                    p Dieses Angebot wurde durch #{shop.app_name} erstellt
-                    p Erstellt am
-                        |
-                        |
-                        span(title=new Date(shop.created).toLocaleTimeString("de-DE"))= new Date(shop.created).toLocaleDateString("de-DE")
-                .col-6
+                .col-12.col-md-6
+                    .text-md-start.text-center
+                        if shop.image
+                            img.img-fluid.rounded.mb-2(src=shop.image, alt='Shopbild', style='height: 250px;')
+                        h1 #{shop.name}
+                        if shop.price
+                            h5.card-text.mb-4
+                                span.text-muted Preis:
+                                    |
+                                    |
+                                span #{shop.price} Ehre
+                        if shop.description
+                            p #{shop.description}
+                        p Dieses Angebot wurde durch #{shop.app_name} erstellt
+                        p Erstellt am
+                            |
+                            |
+                            span(title=new Date(shop.created).toLocaleTimeString("de-DE"))= new Date(shop.created).toLocaleDateString("de-DE")
+                .col-12.col-md-6
                     .display-6.mb-3 Item Vorschau
                     .card
 
@@ -70,9 +71,9 @@ block content
             .row.d-flex.justify-content-center.mb-5
                 h1.display-1.text-center Angebot nicht gefunden
 block bottombar
-    .sticky-bottom.row.w-100.pb-2
-            .col-1
-            .col-10
+    .sticky-bottom.row.w-100.pb-2.mx-auto
+            .col-1.col-md-1
+            .col-12.col-md-10
                 .card
                     .card-body.bg-light
                         .d-flex.flex-wrap
@@ -97,9 +98,9 @@ block bottombar
                                     #validationServer03Feedback.invalid-feedback
                                         span#couponError
                             .col.col-12.col-sm-5.col-lg-3
-                                .d-flex.justify-content-end
+                                .d-flex.justify-content-sm-end.justify-content-evenly
                                     input#shop_id(type='hidden', value=shop.shop_id)
                                     input#shop_price(type='hidden', value=shop.price)
                                     input#balance(type='hidden', value=user.balance)
-                                    .badge.my-auto.mx-2#bonus.text-white.bg-success.d-none
+                                    .badge.my-auto.mx-2#bonus.text-white.bg-success .d-none
                                     button.btn.btn-primary(type='button', onclick='buy()') Kaufen

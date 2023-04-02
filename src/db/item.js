@@ -13,8 +13,8 @@ export async function setupItems() {
             tags VARCHAR(512) NOT NULL,
             created TIMESTAMP NOT NULL DEFAULT NOW(),
             app_id INTEGER NOT NULL,
-            button_text VARCHAR(255) NOT NULL,
-            button_url VARCHAR(512) NOT NULL,
+            button_text VARCHAR(255),
+            button_url VARCHAR(512),
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
             FOREIGN KEY (app_id) REFERENCES apps(app_id) ON DELETE CASCADE ON UPDATE CASCADE,
             UNIQUE (item_id)

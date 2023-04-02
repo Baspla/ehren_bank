@@ -17,8 +17,8 @@ export function setupShops() {
             item_image VARCHAR(512),
             item_rarity VARCHAR(255) NOT NULL,
             item_tags VARCHAR(512) NOT NULL,
-            item_button_text VARCHAR(255) NOT NULL,
-            item_button_url VARCHAR(512) NOT NULL,
+            item_button_text VARCHAR(255),
+            item_button_url VARCHAR(512),
             FOREIGN KEY (app_id) REFERENCES apps(app_id) ON DELETE CASCADE ON UPDATE CASCADE,
             UNIQUE (shop_id)
         );

@@ -1,14 +1,15 @@
-extends extends/base
+extends extends/hero
 block css
     link(rel='stylesheet' href='/css/transfer.css')
+block title
+    | Überweisung tätigen
+block subtitle
+    | Überweise Ehre an andere Benutzer
 block content
-    .text-center.px-4.py-5.text-white.bg-primary
-        h2.display-6.fw-bold
-            | Ehre überweisen
     .container.mx-auto.my-5
         if error
             .card.bg-danger.mb-3
-                .card-body
+                .card-body.text-white
                     h3.fs-2.card-title Fehler
                     case error
                         when 'invalid-amount'
@@ -23,31 +24,4 @@ block content
                             p.card-text Die Überweisung ist fehlgeschlagen.
                         default
                             p.card-text Ein unbekannter Fehler ist aufgetreten.
-        .card
-            .card-body
-                h3.fs-2.card-title Überweisung tätigen
-                form(method='POST' action="/transfer")#transfer-form
-                    .form-floating.mb-3
-                        input#amount.form-control(type='number' name='amount' placeholder='Betrag' min='1' max='1000000' step='1' value = amount || '' required)
-                        label(for='amount') Betrag
-                    .mb-3
-                        label.form-label(for='transfer-to') Empfänger
-
-                        select.form-select#transfer-to(name='to' required)
-                            if users != null
-                                if users.length <= 1
-                                    option(value='' disabled selected) Du bist der einzige Benutzer
-                                else
-                                    option(value='' disabled selected=to!==null) Empfänger wählen
-                                    for u in users
-                                        if u.user_id !== user.user_id
-                                            option(value=u.user_id selected=u.user_id===to)= u.displayname
-                            else
-                                option(value='' disabled) Keine Benutzer gefunden
-                    .mb-3
-                        label.form-label(for='transfer-reason') Nachricht
-                        textarea.form-control#transfer-description(rows="3" name='reason' placeholder='Nachricht' required)= reason || ''
-                    .mb-3
-                        button.btn.btn-primary(type='submit') Überweisen
-            .card-footer.text-end
-                a.btn.btn-outline-secondary.me-2(href='/dashboard') Zurück
+        include includes/transfer

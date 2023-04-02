@@ -1,0 +1,32 @@
+extends ../../extends/hero
+block title
+    | App bearbeiten
+block subtitle
+    | Hier kannst du eine App bearbeiten
+block content
+    .container.mt-4
+        form(action="/admin/apps/"+app.app_id+"/edit" method="post").col-12.mb-4
+            label.form-label(for="display") Anzeigename
+            input.form-control.mb-3#display(name="name",placeholder="Anzeigename der App", type="text" required value=app.name)
+            label.form-label(for="desc") Beschreibung
+            input.form-control.mb-3#desc(name="description",placeholder="Beschreibung der App", type="text" required value=app.description)
+            label.form-label(for="desc") URL
+            input.form-control.mb-3#url(name="url",placeholder="URL der App", type="url" required value=app.url)
+            label.form-label(for="desc") API Token
+            input.form-control.mb-3#apikey(name="apikey",placeholder="Token", type="text" required value=app.apikey)
+            .card.mb-3
+                .card-header
+                    h5.card-title Berechtigungen
+                .card-body
+                    p.card-text
+                        | Wähle die Berechtigungen aus, die die App benötigt.
+                    .form-check
+                        input.form-check-input#permissionsBalance(name="permissionsBalance", type="checkbox", value="true" checked=(app.permissions >> 0 & 1) === 1)
+                        label.form-check-label(for="permissionsBalance") Ehre
+                    .form-check
+                        input.form-check-input#permissionsItems(name="permissionsItems", type="checkbox", value="true" checked=(app.permissions >> 1 & 1) === 1)
+                        label.form-check-label(for="permissionsItems") Items
+                    .form-check.mb-3
+                        input.form-check-input#permissionsShop(name="permissionsShop", type="checkbox", value="true" checked=(app.permissions >> 2 & 1) === 1)
+                        label.form-check-label(for="permissionsShop") Shop
+            button.btn.btn-warning(type='submit') Speichern

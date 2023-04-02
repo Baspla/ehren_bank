@@ -1,9 +1,0 @@
-export const appTokenRegex = /[^a-zA-Z-\d]/g
-export const transactionDescriptionRegex = /[^a-zA-Z\d\s]/g
-export const descriptionRegex = /[^a-zA-Z\d\s]/g
-export const adminRegex = /[^a-zA-Z-\d]/g
-export const displaynameRegex = /[^a-zA-Z-\d\s\p{Emoji_Presentation}]/gu
-export const usernameRegex = /[^a-zA-Z-\d]/g
-export const appIdRegex = /[^a-zA-Z-]/g
-export const sessionRegex = /["':]/g
-export const userIdentifierRegex= /["':]/g

@@ -1,0 +1,14 @@
+extends extends/hero
+block title
+    | Error
+block content
+    | Ein Fehler ist aufgetreten.
+block content
+    .container
+        .row
+            .col-12
+                h1 Error
+                p Ein Fehler ist aufgetreten.
+                p= error.message
+                p= error.status
+                p= error.stack

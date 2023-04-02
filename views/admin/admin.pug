@@ -1,27 +1,29 @@
-extends ../extends/base
+extends ../extends/hero
+block title
+    | Admin
+block subtitle
+    | Hier kannst du die Ehrenbank verwalten.
 block content
-    .text-center.px-4.py-5.text-white.bg-primary
-        h2.display-6.fw-bold
-            | Admin
-        p.lead
-            | Hier kannst du die Ehrenbank verwalten.
     .container.mt-4
-        .card.mb-4
-            .card-header
-                h5.card-title
-                    | Werbung
-            .card-body
-                .card-text
-                    p Hier kannst du Werbung auf der Startseite verwalten.
-                    a(href="/admin/promotions").btn.btn-primary Werbungen verwalten
-        .card.mb-4
-            .card-header
-                h5.card-title
-                    | Apps
-            .card-body
-                .card-text
-                    p Hier kannst du Apps verwalten.
-                    a(href="/admin/apps/").btn.btn-primary Apps
+        .row
+            .col-md-6
+                .card.mb-4
+                    .card-header
+                        h5.card-title
+                            | Werbung
+                    .card-body
+                        .card-text
+                            p Hier kannst du Werbung auf der Startseite verwalten.
+                            a(href="/admin/promotions").btn.btn-primary Werbungen verwalten
+            .col-md-6
+                .card.mb-4
+                    .card-header
+                        h5.card-title
+                            | Apps
+                    .card-body
+                        .card-text
+                            p Hier kannst du Apps verwalten.
+                            a(href="/admin/apps/").btn.btn-primary Apps verwalten
         .card.mb-4
             .card-header
                 h5.card-title

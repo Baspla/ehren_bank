@@ -4,46 +4,46 @@ import cookieParser from 'cookie-parser';
 import {setupDatabase} from "./db/db.js";
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
+import {restapi} from "./api/restapi.js";
 import {
-    admin,
-    apps,
-    callback,
-    dashboard,
-    debug,
-    developers,
-    errorHandler,
-    index,
-    isLoggedIn,
-    items,
-    login,
-    logout,
-    makeadmin,
-    postMakeadmin,
-    postTransfer,
-    shop,
-    transactions,
-    transfer,
-    unknownPage
-} from "./controller/controller.js";
-import {restapi} from "./restapi.js";
-import {
-    getApps,
-    getAppsCreate,
-    getAppsDelete,
-    getAppsEdit,
-    getAppsInfo,
-    postAppsCreate,
-    postAppsEdit
+    renderApps,
+    renderAppsCreate,
+    renderAppsDelete,
+    renderAppsEdit,
+    renderAppsInfo,
+    processAppsCreate,
+    processAppsEdit
 } from "./controller/admin/apps.js";
 import {getUserInfo} from "./db/user.js";
 import {
-    getPromotions,
-    getPromotionsCreate,
-    getPromotionsDelete,
-    getPromotionsEdit,
-    postPromotionsCreate,
-    postPromotionsEdit
+    renderPromotions,
+    renderPromotionsCreate,
+    renderPromotionsDelete,
+    renderPromotionsEdit,
+    processPromotionsCreate,
+    processPromotionsEdit
 } from "./controller/admin/promotions.js";
+import {
+    processShopCoupon,
+    processShopKaufen,
+    renderShopInfo,
+    renderShopKaufen,
+    renderShops
+} from "./controller/shop.js";
+import {renderItems, renderItemsInfo} from "./controller/items.js";
+import {renderTransfer, processTransfer} from "./controller/transfer.js";
+import {renderDashboard} from "./controller/dashboard.js";
+import {renderIndex} from "./controller/index.js";
+import {renderAppsLimited} from "./controller/apps.js";
+import {renderDevelopers} from "./controller/developers.js";
+import {renderTransactions} from "./controller/transactions.js";
+import {renderAdmin} from "./controller/admin/admin.js";
+import {callback, login, logout} from "./controller/auth.js";
+import {renderDebug} from "./controller/debug.js";
+import {renderMakeadmin, processMakeadmin} from "./controller/makeadmin.js";
+import {renderUnknownPage} from "./controller/404.js";
+import {errorHandler, isLoggedIn} from "./util/controller_utils.js";
+import bodyParser from "body-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -60,10 +60,10 @@ webapp.use(session({
 }))
 webapp.set('view engine', 'pug')
 webapp.use('/css', express.static(__dirname + '/../node_modules/bootstrap/dist/css'))
-webapp.use('/css', express.static(__dirname + '/../css'))
+webapp.use('/css', express.static(__dirname + '/../static/css'))
 webapp.use('/js', express.static(__dirname + '/../node_modules/bootstrap/dist/js'))
-webapp.use('/favicon.ico', express.static(__dirname + '/../img/favicon.ico'))
-webapp.use('/scripts', express.static(__dirname + '/../scripts'))
+webapp.use('/favicon.ico', express.static(__dirname + '/../static/img/favicon.ico'))
+webapp.use('/scripts', express.static(__dirname + '/../static/scripts'))
 webapp.use(express.json());
 webapp.use(express.urlencoded({extended: true}));
 webapp.use((req, res, next) => {
@@ -79,7 +79,7 @@ webapp.use('/api/v1', restapi())
 // WEP PAGES
 //
 
-webapp.get('/', index)
+webapp.get('/', renderIndex)
 
 webapp.get('/login', login)
 webapp.get('/callback', callback)
@@ -88,64 +88,66 @@ const userRouter = express.Router()
 userRouter.use(checkIsLoggedIn)
 userRouter.use(annotateUserInformation)
 
-userRouter.get('/dashboard', dashboard)
+userRouter.get('/dashboard', renderDashboard)
 
 userRouter.get('/logout', logout)
 
-userRouter.get('/developers', developers)
+userRouter.get('/developers', renderDevelopers)
 
+const shopRouter = express.Router()
+shopRouter.get('/', renderShops)
+shopRouter.get('/:shop_id', renderShopKaufen)
+shopRouter.post('/:shop_id/kaufen', processShopKaufen)
+shopRouter.post('/:shop_id/coupon', processShopCoupon)
+userRouter.use('/shop', shopRouter)
 
-userRouter.get('/shop', shop)
+const itemsRouter = express.Router()
+itemsRouter.get('/:item_id', renderItemsInfo)
+itemsRouter.get('/', renderItems)
+userRouter.use('/items', itemsRouter)
 
-userRouter.get('/items', items)
+userRouter.get('/transactions', renderTransactions)
 
-userRouter.get('/transactions', transactions)
+userRouter.get('/transfer', renderTransfer)
+userRouter.post('/transfer', processTransfer)
 
-userRouter.get('/transfer', transfer)
-userRouter.post('/transfer', postTransfer)
-
-userRouter.get('/apps', apps)
+userRouter.get('/apps', renderAppsLimited)
 
 
 const adminRouter = express.Router()
-adminRouter.get('/', admin)
+adminRouter.get('/', renderAdmin)
 
 const appRouter = express.Router()
-appRouter.get('/', getApps)
-appRouter.get('/create', getAppsCreate)
-appRouter.get('/:app_id/', logParams ,getAppsInfo)
-appRouter.get('/:app_id/edit', getAppsEdit)
-appRouter.get('/:app_id/delete', getAppsDelete)
-appRouter.post('/create', postAppsCreate)
-appRouter.post('/:app_id/edit', postAppsEdit)
+appRouter.get('/', renderApps)
+appRouter.get('/create', renderAppsCreate)
+appRouter.get('/:app_id/' ,renderAppsInfo)
+appRouter.get('/:app_id/edit', renderAppsEdit)
+appRouter.get('/:app_id/delete', renderAppsDelete)
+appRouter.post('/create', processAppsCreate)
+appRouter.post('/:app_id/edit', processAppsEdit)
 adminRouter.use('/apps' ,appRouter)
 
 
 const promotionRouter = express.Router()
-promotionRouter.get('/', getPromotions)
-promotionRouter.get('/create', getPromotionsCreate)
-promotionRouter.get('/edit', getPromotionsEdit)
-promotionRouter.get('/delete', getPromotionsDelete)
-promotionRouter.post('/create', postPromotionsCreate)
-promotionRouter.post('/edit', postPromotionsEdit)
+promotionRouter.get('/', renderPromotions)
+promotionRouter.get('/create', renderPromotionsCreate)
+promotionRouter.get('/:promotion_id', (req, res) => res.redirect('/admin/promotions'))
+promotionRouter.get('/:promotion_id/edit', renderPromotionsEdit)
+promotionRouter.get('/:promotion_id/delete', renderPromotionsDelete)
+promotionRouter.post('/create', processPromotionsCreate)
+promotionRouter.post('/:promotion_id/edit', processPromotionsEdit)
 adminRouter.use('/promotions', promotionRouter)
 
 
 userRouter.use('/admin', checkIsAdmin, adminRouter)
 
-userRouter.get('/makeadmin', makeadmin)
-userRouter.post('/makeadmin', postMakeadmin)
+userRouter.get('/makeadmin', renderMakeadmin)
+userRouter.post('/makeadmin', processMakeadmin)
 
-userRouter.get('/debug', debug)
+userRouter.get('/debug', renderDebug)
 
 webapp.use(userRouter)
-webapp.get('*', unknownPage)
-
-
-
-function logParams(req, res, next) {
-    next()
-}
+webapp.get('*', renderUnknownPage)
 
 async function start() {
     await setupDatabase().then(() => {
@@ -171,7 +173,6 @@ function checkIsLoggedIn(req, res, next) {
     if (isLoggedIn(req)) {
         next()
     } else {
-        console.log("Redirecting to " + '/login?returnURL=' + encodeURIComponent(req.path))
         res.redirect('/login?returnURL=' + encodeURIComponent(req.path))
     }
 }

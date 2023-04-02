@@ -1,28 +1,39 @@
 extends ../../extends/hero
 block title
-    | App ##{app.app_id}
+    if app
+        | App ##{app.app_id}
+    else
+        | App nicht gefunden
 block subtitle
-    | Hier kannst du die Informationen der App einsehen.
+    if app
+        | Hier kannst du die Informationen der App einsehen.
+    else
+        | Die angeforderte App konnte nicht gefunden werden.
 block content
     .container.mt-4
-        .card.mt-3
-            .card-header
-                h5.card-title #{app.name}
-                if app.permissions >> 0 & 1 === 1
-                    span.badge.badge-pill.bg-primary.me-1 Ehre
-                if app.permissions >> 1 & 1 === 1
-                    span.badge.badge-pill.bg-primary.me-1 Items
-                if app.permissions >> 2 & 1 === 1
-                    span.badge.badge-pill.bg-primary.me-1 Shop
-            .card-body
-                p.card-text #{app.description}
-            .card-footer.text-muted.flex-row.d-flex.justify-content-between
-                a(href = app.url).btn.btn-outline-secondary Website
-                .btn-group
-                    a(href = "/admin/apps/" + app.app_id+"/edit").btn.btn-warning Bearbeiten
-                    a(href = "/admin/apps/" + app.app_id+"/delete").btn.btn-danger Löschen
-        .card.mt-3
-            .card-header
-                h5.card-title API Token
-            .card-body
-                input.form-control.mb-3#token(name="token",placeholder="App Token", type="text" value=app.apikey disabled)
+        if app
+            .card.mt-3
+                .card-header
+                    h5.card-title #{app.name}
+                    if app.permissions >> 0 & 1 === 1
+                        span.badge.badge-pill.bg-primary.me-1 Ehre
+                    if app.permissions >> 1 & 1 === 1
+                        span.badge.badge-pill.bg-primary.me-1 Items
+                    if app.permissions >> 2 & 1 === 1
+                        span.badge.badge-pill.bg-primary.me-1 Shop
+                .card-body
+                    p.card-text #{app.description}
+                .card-footer.text-muted.flex-row.d-flex.justify-content-between
+                    a(href = app.url).btn.btn-outline-secondary Website
+                    .btn-group
+                        a(href = "/admin/apps/" + app.app_id+"/edit").btn.btn-warning Bearbeiten
+                        a(href = "/admin/apps/" + app.app_id+"/delete").btn.btn-danger Löschen
+            .card.mt-3
+                .card-header
+                    h5.card-title API Token
+                .card-body
+                    input.form-control.mb-3#token(name="token",placeholder="App Token", type="text" value=app.apikey disabled)
+        else
+            .card.mt-3
+                .card-body
+                    p.card-text Keine App mit dieser ID vorhanden

@@ -1,10 +1,9 @@
-extends extends/base
+extends extends/hero
+block title
+    | Transaktionen
+block subtitle
+    | Hier siehst du alle deine Transaktionen
 block content
-    .text-center.px-4.py-5.bg-primary.text-white
-        h2.display-6.fw-bold
-            | Transaktionen
-        p.lead
-            | Hier siehst du alle deine Transaktionen
     .container.mx-auto.my-5
         ul.list-group
             if transactions && transactions.length > 0

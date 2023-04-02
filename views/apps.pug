@@ -1,11 +1,9 @@
-extends extends/base
-block scripts
+extends extends/hero
+block title
+    | Apps mit Ehrenbank-Integration
+block subtitle
+    | Hier kannst du Punkte bekommen und Items kaufen.
 block content
-    .text-center.px-4.py-5.text-white.bg-primary
-        h2.display-6.fw-bold
-            | Apps mit Ehrenbank-Integration
-        p.lead
-            | Hier kannst du Punkte bekommen und Items kaufen.
     .container.mt-4
         if apps
             for app in apps

@@ -1,23 +1,24 @@
-extends extends/base
+extends extends/hero
+block title
+    | Willkommen auf der Ehrenbank
+block subtitle
+    include includes/greeting
 block content
-    .text-center.px-4.py-4.bg-primary.text-white
-        h2.display-6.fw-bold
-            | Willkommen auf der Ehrenbank
-        p.lead
-            include includes/greeting
-        p Du bist seit #{new Date(user.created_at).toLocaleDateString("de-DE")} dabei.
     .container.mx-auto.my-5
-        .row.row-cols-sm-1.row-cols-md-2.gx-4.my-4
+        .row.row-cols-1.row-cols-md-2.gx-4.my-4
             .col
                 include includes/kontostand
                 include includes/ads
             .col
                 include includes/lasttransactions
         hr.mb-5
-        .row.row-cols-sm-1.row-cols-md-3.gx-4.my-4
-            if user.is_admin
+        .row.row-cols-1.row-cols-md-3.gx-4.my-4
+            if !user.is_admin
                 .col
                     include includes/adminprompt
+            else
+                .col
+                    include includes/dabeiprompt
             .col
                 include includes/developerprompt
             .col

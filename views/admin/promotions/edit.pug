@@ -1,0 +1,28 @@
+extends ../../extends/hero
+block title
+    | Promotion bearbeiten
+block subtitle
+    | Hier kannst du eine Promotion bearbeiten
+block content
+    .container.mt-4
+        form(action="/admin/promotions/"+promotion.promotion_id+"/edit" method="post").col-12.mb-4
+            .mb-3
+                label.form-label(for="name") Name
+                input.form-control(type="text" name="name" id="name" placeholder="Name" value=promotion.name required)
+            .mb-3
+                label.form-label(for="description") Beschreibung
+                input.form-control(type="text" name="description" id="description" placeholder="Beschreibung" value=promotion.description required)
+            .mb-3
+                label.form-label(for="url") URL
+                input.form-control(type="url" name="url" id="url" placeholder="URL" value=promotion.url)
+            .mb-3
+                label.form-label(for="image_url") Bild URL
+                input.form-control(type="url" name="image_url" id="image_url" placeholder="Bild URL" value=promotion.image_url)
+            .mb-3
+                label.form-label(for="color_left") Farbe links
+                input.form-control(type="color" name="color_left" id="color_left" placeholder="Farbe links" value=promotion.color_left required)
+            .mb-3
+                label.form-label(for="color_right") Farbe rechts
+                input.form-control(type="color" name="color_right" id="color_right" placeholder="Farbe rechts" value=promotion.color_right required)
+            .mb-3
+                button.btn.btn-outline-primary(type="submit") Bearbeiten

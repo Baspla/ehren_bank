@@ -3,7 +3,7 @@ html
     include ../includes/head
     body
         block main
-            nav.navbar.navbar-expand-lg.bg-light
+            nav.navbar.navbar-expand-lg.bg-light.sticky-top.border-bottom.border-5.border-light
                 .container-fluid.me-auto
                     a.navbar-brand(href='/') Ehrenbank
                     if process.env.DEBUG
@@ -28,7 +28,9 @@ html
                                         a.nav-link(href='/admin') Admin
                         ul.navbar-nav.ms-auto
                             if user != null
-                                li.nav-item
+                                //li.nav-item
+                                //    span.nav-link.active #{user.balance} Ehre
+                                li.nav-item.me-1
                                     a.nav-link.active Angemeldet als #{user.displayname}
                                 li.nav-item
                                     //if path
@@ -56,3 +58,4 @@ html
                                     |
                                     |
                                     a(href='https://timmorgner.de').link-dark.text-decoration-none Tim
+            block bottombar

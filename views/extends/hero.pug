@@ -1,21 +1,28 @@
 extends base
 block precontent
-    .text-center.px-4.py-5.text-white.bg-primary
+    .text-center.px-4.py-4.text-white.bg-primary
+        block above_titlebar
         h2.display-6.fw-bold
             block title
         p.lead
             block subtitle
-    nav.mx-4.my-3
-        - var breadcrumbs = path.split("/");
-        - var link = "";
-        ol.breadcrumb
-            for crumb,index in breadcrumbs
-                - link += crumb + "/";
-                if index === 0
-                    li.breadcrumb-item
-                        a(href=link).text-decoration-none Home
-                else if index === breadcrumbs.length - 1
-                    li.breadcrumb-item.active.text-capitalize #{crumb}
-                else
-                    li.breadcrumb-item
-                        a(href=link).text-decoration-none.text-capitalize #{crumb}
+        block below_titlebar
+
+    if path
+        nav.mx-4.my-3
+            - var withoutArgs = path.split("?")[0];
+            - var breadcrumbs = withoutArgs.split("/");
+                if breadcrumbs[breadcrumbs.length-1] === ""
+                    - breadcrumbs.pop()
+            - var link = "";
+            ol.breadcrumb
+                for crumb,index in breadcrumbs
+                    - link += crumb + "/";
+                    if index === 0
+                        li.breadcrumb-item
+                            a(href=link).text-decoration-none Home
+                    else if index === breadcrumbs.length - 1
+                        li.breadcrumb-item.active.text-capitalize #{crumb}
+                    else
+                        li.breadcrumb-item
+                            a(href=link).text-decoration-none.text-capitalize #{crumb}

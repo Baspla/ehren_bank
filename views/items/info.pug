@@ -1,0 +1,57 @@
+extends ../extends/hero
+block title
+    | Item Info
+block subtitle
+    | Info zu dem Item
+block append css
+    link(rel='stylesheet', href='/css/rarity.css')
+block append js
+    script(src='/scripts/copyToClipboard.js')
+block content
+    .container
+        if item
+            if item.image
+                img.card-img-top(src=item.image, alt='Gegenstandsbild', style='height: 250px; object-fit: cover;')
+            h5.display-6 #{item.name}
+            if item.description
+                p #{item.description}
+            p Dieses Item gehört #{item.user_displayname}
+            p Dieses Item wurde durch #{item.app_name} erstellt
+            p Erhalten am
+                |
+                |
+                span(title=new Date(item.created).toLocaleTimeString("de-DE"))= new Date(item.created).toLocaleDateString("de-DE")
+            case item.rarity
+                when '0'
+                    .badge.bg-rarity-common.text-white Gewöhnlich
+                when '1'
+                    .badge.bg-rarity-uncommon.text-black.text-opacity-75  Ungewöhnlich
+                when '2'
+                    .badge.bg-rarity-rare.text-white.text-opacity-75 Selten
+                when '3'
+                    .badge.bg-rarity-epic.text-white.text-opacity-75 Episch
+                when '4'
+                    .badge.bg-rarity-legendary.text-black.text-opacity-75 Legendär
+                when '5'
+                    .badge.bg-rarity-mythic.text-black.text-opacity-75 Mythisch
+                default
+                    .badge.bg-rarity-custom.text-black.text-opacity-75
+                        span(style="text-transform:capitalize;", title="custom rarity - " + item.rarity) #{item.rarity}
+
+            - var tags = item.tags.split(',')
+            - tags.map(s => s.trim())
+            for tag, index in tags
+                if index < 2 || tags.length < 4
+                    span.badge.badge-pill.bg-secondary.ms-1 #{tag}
+                else if index === 2
+                    span.badge.badge-pill.bg-secondary.ms-1 ...
+                else
+                    break
+            .d-flex.mt-3
+                .row-cols-3
+                    .input-group
+                        input.form-control(type='text', value=process.env.BASE_URL+'/items/'+item.item_id, id='itemLink', readonly)
+                        button.btn.btn-outline-primary.btn-sm.float-end(onclick='copyToClipboard("'+process.env.BASE_URL+'/items/'+item.item_id+'")') Link kopieren
+        else
+            .row.d-flex.justify-content-center.mb-5
+                h1.display-1.text-center Item nicht gefunden

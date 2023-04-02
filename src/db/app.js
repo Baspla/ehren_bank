@@ -1,6 +1,7 @@
 import sql from "./db.js";
 
 export async function setupApps() {
+    console.log("Erstelle Tabelle 'apps'...")
     return sql`
         CREATE TABLE IF NOT EXISTS apps (
             app_id SERIAL PRIMARY KEY,
@@ -23,14 +24,23 @@ export function createApp(name, description, url, permissions, apikey) {
 }
 
 export function deleteApp(appID) {
+    if (isNaN(appID)) {
+        return null;
+    }
     return sql`DELETE FROM apps WHERE app_id = ${appID}`;
 }
 
 export function updateApp(appID, name, description, url, permissions, apikey) {
+    if (isNaN(appID)) {
+        return null;
+    }
     return sql`UPDATE apps SET name = ${name}, description = ${description}, url = ${url}, permissions = ${permissions}, apikey = ${apikey} WHERE app_id = ${appID}`;
 }
 
 export function getAppInfo(appID) {
+    if (isNaN(appID)) {
+        return null;
+    }
     return sql`SELECT * FROM apps WHERE app_id = ${appID}`.then(result => {
         if (result.length === 0)
             return null;

@@ -1,0 +1,14 @@
+.card.mb-4
+    .card-body
+        p.card-text.display-6
+            | Du bist schon
+            |
+            = Math.floor((Date.now() - user.created_at) / 86400000)
+            |
+            | Tage dabei!
+
+        p.card-text.fw-semibold.text-success Vielen Dank für deine Unterstützung!
+        p.card-text
+            | Wir freuen uns, dass du uns dabei hilfst, die Ehre zu erhalten!
+            | Wenn du Fragen hast, kannst du dich gerne an uns wenden.
+        a.btn.btn-outline-primary(href='mailto:ehrenbank@timmorgner.de') E-Mail schreiben

@@ -1,5 +1,7 @@
 //connect to a postgres database
 import postgres from 'postgres';
+import prexit from 'prexit';
+
 import {
     setupUsers
 } from "./user.js";
@@ -26,10 +28,15 @@ const sql = postgres({
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     username: process.env.DB_USER,
+    onnotice: (notice) => {}
 });
 
-export default sql;
+prexit(async () => {
+    await sql.end({ timeout: 5 })
+    await console.log("Datenbankverbindung geschlossen!")
+})
 
+export default sql;
 
 // Setup database tables
 export async function setupDatabase() {

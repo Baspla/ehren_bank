@@ -1,0 +1,36 @@
+extends ../../extends/base
+block content
+    .text-center.px-4.py-5.text-white.bg-primary
+        h2.display-6.fw-bold
+            | Promotions
+        p.lead
+            | Verwalte alle Promotions
+    .container.mt-4
+        .row
+            if promotions && promotions.length > 0
+                for promotion in promotions
+                    .col-12.col-xl-6
+                        .card.mb-4.text-white.border-secondary(style='background: ' + promotion.color_right + '};background: linear-gradient(90deg, ' + promotion.color_left + ' 0%, ' + promotion.color_right + ' 100%);')
+                            if promotion.image_url
+                                img.img-fluid.card-img-top(src=promotion.image_url alt="Promotion Image")
+                            .card-body
+                                h5.card-title #{promotion.name}
+                                p.card-text
+                                    | #{promotion.description}
+                            .card-footer.d-flex.justify-content-between.bg-light.text-black
+                                if promotion.url
+                                    span.py-1 Link zu
+                                        |
+                                        |
+                                        a(href=promotion.url).me-2= promotion.url
+                                else
+                                    span.py-1 Kein Link vorhanden
+                                .btn-group
+                                    a.btn.btn-danger(href="/admin/promotions/" + promotion.promotion_id + "/delete") Löschen
+                                    a.btn.btn-warning(href="/admin/promotions/" + promotion.promotion_id + "/edit") Bearbeiten
+            else
+                p.text-center Keine Promotions vorhanden
+        a.btn.btn-primary(href="/admin/promotions/create").col-12.mb-4 Erstelle eine neue Promotion
+        //Beispiel für eine Promotion
+        // Schreibcontest
+        //

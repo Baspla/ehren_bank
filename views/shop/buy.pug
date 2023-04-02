@@ -1,0 +1,105 @@
+extends ../extends/hero
+block title
+    | Kaufen
+block subtitle
+    |
+block append css
+    link(rel='stylesheet', href='/css/rarity.css')
+block append js
+    script(src='/scripts/buy.js')
+block content
+    .container
+        if shop
+            .row-cols-2.row
+                .col-6
+                    if shop.image
+                        img.img-fluid.rounded.mb-2(src=shop.image, alt='Shopbild', style='height: 250px;')
+                    h1 #{shop.name}
+                    if shop.price
+                        h5.card-text.mb-4
+                            span.text-muted Preis:
+                                |
+                                |
+                            span #{shop.price} Ehre
+                    if shop.description
+                        p #{shop.description}
+                    p Dieses Angebot wurde durch #{shop.app_name} erstellt
+                    p Erstellt am
+                        |
+                        |
+                        span(title=new Date(shop.created).toLocaleTimeString("de-DE"))= new Date(shop.created).toLocaleDateString("de-DE")
+                .col-6
+                    .display-6.mb-3 Item Vorschau
+                    .card
+
+                        if shop.item_image
+                            img.card-img-top(src=shop.item_image, alt='Itembild', style='height: 250px; object-fit: cover; object-position: 50% 0%')
+                        .card-body
+                            h5.card-title #{shop.item_name}
+                            if shop.item_description
+                                p.card-text #{shop.item_description}
+                        .card-footer.text-muted.flex-row.d-flex
+                            .ms-auto
+                                case shop.item_rarity
+                                    when '0'
+                                        .badge.bg-rarity-common.text-white Gewöhnlich
+                                    when '1'
+                                        .badge.bg-rarity-uncommon.text-black.text-opacity-75  Ungewöhnlich
+                                    when '2'
+                                        .badge.bg-rarity-rare.text-white.text-opacity-75 Selten
+                                    when '3'
+                                        .badge.bg-rarity-epic.text-white.text-opacity-75 Episch
+                                    when '4'
+                                        .badge.bg-rarity-legendary.text-black.text-opacity-75 Legendär
+                                    when '5'
+                                        .badge.bg-rarity-mythic.text-black.text-opacity-75 Mythisch
+                                    default
+                                        .badge.bg-rarity-custom.text-black.text-opacity-75
+                                            span(style="text-transform:capitalize;", title="custom rarity - " + shop.item_rarity) #{shop.item_rarity}
+
+                                - var tags = shop.item_tags.split(',')
+                                - tags.map(s => s.trim())
+                                for tag, index in tags
+                                    if index < 2 || tags.length < 4
+                                        span.badge.badge-pill.bg-secondary.ms-1 #{tag}
+                                    else if index === 2
+                                        span.badge.badge-pill.bg-secondary.ms-1 ...
+                                    else
+                                        break
+        else
+            .row.d-flex.justify-content-center.mb-5
+                h1.display-1.text-center Angebot nicht gefunden
+block bottombar
+    .sticky-bottom.row.w-100.pb-2
+            .col-1
+            .col-10
+                .card
+                    .card-body.bg-light
+                        .d-flex.flex-wrap
+                            .col.col-12.col-sm-5.col-lg-3.d-flex.mb-3.mb-lg-0
+                                h5.my-auto Preis:
+                                    |
+                                    |
+                                    span.d-none#preCoupon.text-decoration-line-through.text-muted.me-1 #{shop.price} Ehre
+                                    span#price #{shop.price} Ehre
+                            .col.col-12.col-sm-7.col-lg-3.d-flex.mb-3.mb-lg-0
+                                h5.my-auto.text-start.text-sm-end.text-lg-start.w-100 Guthaben:
+                                    |
+                                    |
+                                    if user.balance < shop.price
+                                        span.text-danger#balanceText #{user.balance} Ehre
+                                    else
+                                        span#balanceText #{user.balance} Ehre
+                            .col.col-12.col-sm-7.col-lg-3.mb-3.mb-lg-0
+                                .input-group
+                                    input.form-control#coupon(type='text', placeholder='Coupon')
+                                    button.btn.btn-outline-secondary.btn-sm.rounded-end(type='button', onclick='redeem()') Einlösen
+                                    #validationServer03Feedback.invalid-feedback
+                                        span#couponError
+                            .col.col-12.col-sm-5.col-lg-3
+                                .d-flex.justify-content-end
+                                    input#shop_id(type='hidden', value=shop.shop_id)
+                                    input#shop_price(type='hidden', value=shop.price)
+                                    input#balance(type='hidden', value=user.balance)
+                                    .badge.my-auto.mx-2#bonus.text-white.bg-success.d-none
+                                    button.btn.btn-primary(type='button', onclick='buy()') Kaufen

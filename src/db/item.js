@@ -11,7 +11,7 @@ export async function setupItems() {
             image VARCHAR(255),
             rarity VARCHAR(255) NOT NULL,
             tags VARCHAR(255) NOT NULL,
-            created TIMESTAMP NOT NULL,
+            created TIMESTAMP NOT NULL DEFAULT NOW(),
             app_id INTEGER NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
             FOREIGN KEY (app_id) REFERENCES apps(app_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -25,20 +25,28 @@ export function itemExists(itemID) {
     return sql`SELECT EXISTS(SELECT 1 FROM items WHERE item_id = ${itemID})`;
 }
 
-export function createItem(itemID, userId, name, description, image, rarity, tags, created, appID) {
-    return sql`INSERT INTO items (item_id, user_id, name, description, image, rarity, tags, created, app_id) VALUES (${itemID}, ${userId}, ${name}, ${description}, ${image}, ${rarity}, ${tags}, ${created}, ${appID})`;
+export function createItem(userId, name, description, image, rarity, tags, created, appID) {
+    return sql`INSERT INTO items (user_id, name, description, image, rarity, tags, created, app_id) VALUES (${userId}, ${name}, ${description}, ${image}, ${rarity}, ${tags}, ${created}, ${appID}) RETURNING item_id`;
 }
 
 export function deleteItem(itemID) {
     return sql`DELETE FROM items WHERE item_id = ${itemID}`;
 }
 
-export function updateItem(itemID, name, description, image, rarity, tags, appID) {
-    return sql`UPDATE items SET name = ${name}, description = ${description}, image = ${image}, rarity = ${rarity}, tags = ${tags}, app_id = ${appID} WHERE item_id = ${itemID}`;
+export function updateItem(itemID, name, description, image, rarity, tags) {
+    return sql`UPDATE items SET name = ${name}, description = ${description}, image = ${image}, rarity = ${rarity}, tags = ${tags}WHERE item_id = ${itemID}`;
 }
 
 export function getItemInfo(itemID) {
-    return sql`SELECT * FROM items WHERE item_id = ${itemID}`;
+    return sql`SELECT items.*, apps.name AS app_name, users.displayname AS user_displayname FROM items JOIN apps ON items.app_id = apps.app_id JOIN users ON items.user_id = users.user_id WHERE item_id = ${itemID}`.then(result => {
+        if (result.length > 0) {
+            return result[0];
+        } else {
+            return null;
+        }
+    }).catch(err => {
+        console.log(err);
+    })
 }
 
 export function getItemCount() {
@@ -58,11 +66,11 @@ export function getItemCountByUser(user_id) {
 }
 
 export function getItemList() {
-    return sql`SELECT * FROM items`;
+    return sql`SELECT items.*, apps.name AS app_name FROM items JOIN apps ON items.app_id = apps.app_id`;
 }
 
 export function getItemListByUser(userID) {
-    return sql`SELECT * FROM items WHERE user_id = ${userID}`;
+    return sql`SELECT items.*, apps.name AS app_name FROM items JOIN apps ON items.app_id = apps.app_id WHERE user_id = ${userID} ORDER BY created DESC`;
 }
 
 export function getItemListByApp(appID) {

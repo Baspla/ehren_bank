@@ -1,6 +1,7 @@
 import sql from "./db.js";
 
 export function setupUsers() {
+    console.log("Erstelle Tabelle 'users'...")
     return sql`
         CREATE TABLE IF NOT EXISTS users (
             user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL UNIQUE,

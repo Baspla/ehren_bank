@@ -69,7 +69,7 @@ export async function processShopKaufen(req, res) {
             await modifyUserBalance(req.temp.user.user_id, -price)
             await createTransaction(req.temp.user.user_id, null, null, shop.app_id, -price, "Shop: "+prefix+shop.name)
             for (let i = 0; i < loops; i++) {
-                await createItem(req.temp.user.user_id, shop.item_name, shop.item_description, shop.item_image, shop.item_rarity, shop.item_tags, now(), shop.app_id)
+                await createItem(req.temp.user.user_id, shop.item_name, shop.item_description, shop.item_image, shop.item_rarity, shop.item_tags, now(), shop.app_id,shop.item_button_text,shop.item_button_url)
             }
             if(coupon != null){
                 await updateCouponUsageCount(coupon[0].coupon_id,coupon[0].usage_count+1)

@@ -10,13 +10,13 @@ block content
         h2.display-5.card-title.mb-4 Alle Angebote
         #shops
             if shops && shops.length > 0
-                .row.row-cols-4.mb-4
+                .row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4.mb-4
                     - currentApp = ''
                     for shop in shops
                         if shop.app_id !== currentApp
                             - currentApp = shop.app_id
                             <!-- App Group Divider with App Name -->
-                            .col-12.mt-4.mb-4
+                            .w-100.mt-4.mb-4
                                 h4.card-title(title=shop.app_id) #{shop.app_name || shop.app_id}
                         .col.mb-3
                             .card.h-100

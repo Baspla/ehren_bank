@@ -10,7 +10,7 @@ block content
         h2.display-5.card-title.mb-4 Deine Gegenstände
         #items
             if items && items.length > 0
-                .row.row-cols-2.mb-4
+                .row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4.mb-4
                     for item in items
                         .col.mb-3
                             .card
@@ -47,7 +47,7 @@ block content
                                         |
                                         |
                                         span(title=new Date(item.created).toLocaleTimeString("de-DE"))= new Date(item.created).toLocaleDateString("de-DE")
-                                    .ms-auto
+                                    .ms-auto.text-end
                                         - var tags = item.tags.split(',')
                                         - tags.map(s => s.trim())
                                         for tag, index in tags

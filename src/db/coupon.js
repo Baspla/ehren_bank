@@ -43,6 +43,8 @@ export function couponExists(couponID) {
 }
 
 export function createCoupon(code, value, type, startDate , endDate, usageLimit, usageCount, created, appID) {
+    type = type.substring(0, 255);
+    code = code.substring(0, 255);
     console.log("createCoupon")
     console.log("code: %s, value: %s, type: %s, startDate: %s, endDate: %s, usageLimit: %s, usageCount: %s, created: %s, appID: %s", code, value, type, startDate, endDate, usageLimit, usageCount, created, appID)
     return sql`

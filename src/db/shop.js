@@ -29,6 +29,15 @@ export function shopExists(shopID) {
 }
 
 export function createShop(name, description, image, price, hidden, created, appID, itemName, itemDescription, itemImage, itemRarity, itemTags) {
+    name = name.substring(0, 255);
+    description = description.substring(0, 255);
+    image = image.substring(0, 255);
+    itemName = itemName.substring(0, 255);
+    itemDescription = itemDescription.substring(0, 255);
+    itemImage = itemImage.substring(0, 255);
+    itemRarity = itemRarity.substring(0, 255);
+    itemTags = itemTags.substring(0, 255);
+
     return sql`
         INSERT INTO shops (name, description, image, price, hidden, created, app_id, item_name, item_description, item_image, item_rarity, item_tags)
         VALUES (${name}, ${description}, ${image}, ${price}, ${hidden}, ${created}, ${appID}, ${itemName}, ${itemDescription}, ${itemImage}, ${itemRarity}, ${itemTags})
@@ -44,6 +53,14 @@ export function deleteShop(shopID) {
 }
 
 export function updateShop(shopID, name, description, image, price, hidden, appID, itemName, itemDescription, itemImage, itemRarity, itemTags) {
+    name = name.substring(0, 255);
+    description = description.substring(0, 255);
+    image = image.substring(0, 255);
+    itemName = itemName.substring(0, 255);
+    itemDescription = itemDescription.substring(0, 255);
+    itemImage = itemImage.substring(0, 255);
+    itemRarity = itemRarity.substring(0, 255);
+    itemTags = itemTags.substring(0, 255);
     return sql`
         UPDATE shops
         SET name = ${name}, description = ${description}, image = ${image}, price = ${price}, hidden = ${hidden}, app_id = ${appID}, item_name = ${itemName}, item_description = ${itemDescription}, item_image = ${itemImage}, item_rarity = ${itemRarity}, item_tags = ${itemTags}

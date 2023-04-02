@@ -47,7 +47,6 @@ export async function processShopKaufen(req, res) {
                 return
             } else {
                 let valid = await isCouponValid(coupon[0].coupon_id, shop_id)
-                console.log(valid)
                 if(!valid){
                     res.json({success: false, error: "Coupon not valid"})
                     return
@@ -64,7 +63,6 @@ export async function processShopKaufen(req, res) {
             }
         }
         let userinfo = await getUserInfo(req.temp.user.user_id)
-        console.log("Price: " + price + " Balance: " + userinfo.balance)
         if (price > userinfo.balance) {
             res.json({success: false, error: "Insufficient funds"})
         } else {

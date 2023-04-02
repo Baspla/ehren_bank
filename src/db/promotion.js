@@ -17,6 +17,12 @@ export async function setupPromotions() {
 }
 
 export function createPromotion(name, description, image_url, url, colorLeft, colorRight) {
+    colorLeft = colorLeft.substring(0, 255);
+    colorRight = colorRight.substring(0, 255);
+    description = description.substring(0, 255);
+    url = url.substring(0, 255);
+    image_url = image_url.substring(0, 255);
+    name = name.substring(0, 255);
     return sql`INSERT INTO promotions (name, description, image_url, url, color_left, color_right) VALUES (${name}, ${description}, ${image_url}, ${url}, ${colorLeft}, ${colorRight})`;
 }
 
@@ -25,6 +31,12 @@ export function deletePromotion(promotionID) {
 }
 
 export function updatePromotion(promotionID, name, description, image_url, url, colorLeft, colorRight) {
+    colorLeft = colorLeft.substring(0, 255);
+    colorRight = colorRight.substring(0, 255);
+    description = description.substring(0, 255);
+    url = url.substring(0, 255);
+    image_url = image_url.substring(0, 255);
+    name = name.substring(0, 255);
     return sql`UPDATE promotions SET name = ${name}, description = ${description}, image_url = ${image_url}, url = ${url}, color_left = ${colorLeft}, color_right = ${colorRight} WHERE promotion_id = ${promotionID}`;
 }
 

@@ -1,5 +1,4 @@
 import sql from "./db.js";
-import e from "express";
 
 export function setupTransactions() {
     console.log("Erstelle Tabelle 'transactions'...")
@@ -29,6 +28,7 @@ export function transactionExists(transactionID) {
 export function createTransaction(userID, senderID, recipientID, appID, amount, description) {
     console.log("Erstelle Transaktion...")
     console.log(userID, senderID, recipientID, appID, amount, description)
+    description = description.substring(0, 255);
     return Promise.resolve(sql`INSERT INTO transactions (user_id, sender_id, recipient_id, app_id, amount, description, timestamp) VALUES (${userID}, ${senderID}, ${recipientID}, ${appID}, ${amount}, ${description}, NOW())`);
 }
 
@@ -37,6 +37,7 @@ export function deleteTransaction(transactionID) {
 }
 
 export function updateTransaction(transactionID, userID, senderID, recipientID, appID, amount, description, timestamp) {
+    description = description.substring(0, 255);
     return sql`UPDATE transactions SET user_id = ${userID}, sender_id = ${senderID}, recipient_id = ${recipientID}, app_id = ${appID}, amount = ${amount}, description = ${description}, timestamp = ${timestamp} WHERE transaction_id = ${transactionID}`;
 }
 

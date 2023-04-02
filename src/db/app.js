@@ -16,6 +16,10 @@ export async function setupApps() {
 }
 
 export function createApp(name, description, url, permissions, apikey) {
+    console.log("Erstelle App. Name: " + name + ", Beschreibung: " + description + ", URL: " + url + ", Permissions: " + permissions + ", API-Key: " + apikey);
+    name = name.substring(0, 255);
+    description = description.substring(0, 255);
+    url = url.substring(0, 255);
     return sql`INSERT INTO apps (name, description, url, permissions, apikey) VALUES (${name}, ${description}, ${url}, ${permissions}, ${apikey}) RETURNING app_id`.then(result => {
         if (result.length === 0)
             return null;
@@ -34,6 +38,9 @@ export function updateApp(appID, name, description, url, permissions, apikey) {
     if (isNaN(appID)) {
         return null;
     }
+    name = name.substring(0, 255);
+    description = description.substring(0, 255);
+    url = url.substring(0, 255);
     return sql`UPDATE apps SET name = ${name}, description = ${description}, url = ${url}, permissions = ${permissions}, apikey = ${apikey} WHERE app_id = ${appID}`;
 }
 

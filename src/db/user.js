@@ -16,6 +16,7 @@ export function setupUsers() {
 }
 
 export function createOrUpdateUser(guardid, displayname) {
+    displayname = displayname.substring(0, 255);
     return sql`INSERT INTO users (guard_id, displayname) VALUES (${guardid}, ${displayname}) ON CONFLICT (guard_id) DO UPDATE SET displayname = ${displayname}, last_login = NOW()`;
 }
 

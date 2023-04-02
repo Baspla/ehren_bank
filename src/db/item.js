@@ -26,6 +26,11 @@ export function itemExists(itemID) {
 }
 
 export function createItem(userId, name, description, image, rarity, tags, created, appID) {
+    name = name.substring(0, 255);
+    description = description.substring(0, 255);
+    image = image.substring(0, 255);
+    rarity = rarity.substring(0, 255);
+    tags = tags.substring(0, 255);
     return sql`INSERT INTO items (user_id, name, description, image, rarity, tags, created, app_id) VALUES (${userId}, ${name}, ${description}, ${image}, ${rarity}, ${tags}, ${created}, ${appID}) RETURNING item_id`;
 }
 
@@ -34,6 +39,11 @@ export function deleteItem(itemID) {
 }
 
 export function updateItem(itemID, name, description, image, rarity, tags) {
+    name = name.substring(0, 255);
+    description = description.substring(0, 255);
+    image = image.substring(0, 255);
+    rarity = rarity.substring(0, 255);
+    tags = tags.substring(0, 255);
     return sql`UPDATE items SET name = ${name}, description = ${description}, image = ${image}, rarity = ${rarity}, tags = ${tags}WHERE item_id = ${itemID}`;
 }
 

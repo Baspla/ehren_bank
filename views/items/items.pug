@@ -22,7 +22,7 @@ block content
                 a(href='/items' title='Alle Gegenstände anzeigen').btn.btn-sm.btn-outline-secondary Alle zeigen
         #items
             if items && items.length > 0
-                .row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4.mb-4
+                .row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xxl-4.mb-4
                     for item in items
                         .col.mb-3
                             .card
@@ -30,9 +30,10 @@ block content
                                     img.card-img-top(src=item.image, alt='Gegenstandsbild', style='height: 250px; object-fit: cover;object-position: 50% 0%')
                                 .card-header
                                     .row
-                                        .col-8
-                                            h5.card-title
-                                                a(href='/items/'+item.item_id).text-decoration-none #{item.name}
+                                        h5.card-title
+                                            a(href='/items/' + item.item_id).text-decoration-none #{item.name}
+                                    .row
+                                        .col-6
                                             case item.rarity
                                                 when '0'
                                                     .badge.bg-rarity-common.text-white Gewöhnlich
@@ -49,9 +50,9 @@ block content
                                                 default
                                                     .badge.bg-rarity-custom.text-black.text-opacity-75
                                                         span(style="text-transform:capitalize;", title="custom rarity - " + item.rarity) #{item.rarity}
-                                        .col-4.flex-column.d-flex
+                                        .col-6.flex-column.d-flex
                                             if item.button_text
-                                                .text-end.my-auto
+                                                .text-end.my-auto.overflow-hidden
                                                     - var iurl = item.button_url
                                                     - iurl = iurl.replace('{item_id}', item.item_id)
                                                     - iurl = iurl.replace('{user_id}', item.user_id)

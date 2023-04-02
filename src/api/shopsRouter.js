@@ -35,8 +35,10 @@ async function processPostShop(req, res) {
         const itemImage = req.body.item.image || null
         const itemRarity = req.body.item.rarity
         const itemTags = req.body.item.tags
+        const itemButtonText = req.body.item.buttonText || null
+        const itemButtonUrl = req.body.item.buttonUrl || null
         const created = new Date().getTime()
-        createShop(name, description, image, price, hidden, created, req.temp.app_id, itemName, itemDescription, itemImage, itemRarity, itemTags).then(shop => {
+        createShop(name, description, image, price, hidden, created, req.temp.app_id, itemName, itemDescription, itemImage, itemRarity, itemTags,itemButtonText,itemButtonUrl).then(shop => {
             res.status(200).json(shop)
         }).catch(err => {
             res.status(500).json({error: err.message})
@@ -62,7 +64,9 @@ async function processPatchShop(req, res) {
                 const itemImage = req.body.item.image || null
                 const itemRarity = req.body.item.rarity
                 const itemTags = req.body.item.tags
-                updateShop(shop.shop_id, name, description, image, price, hidden, shop.app_id, itemName, itemDescription, itemImage, itemRarity, itemTags).then(() => {
+                const itemButtonText = req.body.item.buttonText || null
+                const itemButtonUrl = req.body.item.buttonUrl || null
+                updateShop(shop.shop_id, name, description, image, price, hidden, shop.app_id, itemName, itemDescription, itemImage, itemRarity, itemTags,itemButtonText,itemButtonUrl).then(() => {
                     res.status(200).json({success: true})
                 }).catch(err => {
                     res.status(500).json({error: err.message})

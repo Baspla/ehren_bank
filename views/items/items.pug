@@ -8,6 +8,18 @@ block append css
 block content
     .container.mx-auto.my-5
         h2.display-5.card-title.mb-4 Deine Gegenstände
+            |
+            |
+            if(app)
+                span von #{app.name}
+                |
+                |
+            span.text-muted (#{items.length})
+            if(app)
+                // gray X Button to remove app filter
+                |
+                |
+                a(href='/items' title='Alle Gegenstände anzeigen').btn.btn-sm.btn-outline-secondary Alle zeigen
         #items
             if items && items.length > 0
                 .row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4.mb-4
@@ -17,24 +29,33 @@ block content
                                 if item.image
                                     img.card-img-top(src=item.image, alt='Gegenstandsbild', style='height: 250px; object-fit: cover;object-position: 50% 0%')
                                 .card-header
-                                    h5.card-title
-                                        a(href='/items/'+item.item_id).text-decoration-none #{item.name}
-                                    case item.rarity
-                                        when '0'
-                                            .badge.bg-rarity-common.text-white Gewöhnlich
-                                        when '1'
-                                            .badge.bg-rarity-uncommon.text-black.text-opacity-75  Ungewöhnlich
-                                        when '2'
-                                            .badge.bg-rarity-rare.text-white.text-opacity-75 Selten
-                                        when '3'
-                                            .badge.bg-rarity-epic.text-white.text-opacity-75 Episch
-                                        when '4'
-                                            .badge.bg-rarity-legendary.text-black.text-opacity-75 Legendär
-                                        when '5'
-                                            .badge.bg-rarity-mythic.text-black.text-opacity-75 Mythisch
-                                        default
-                                            .badge.bg-rarity-custom.text-black.text-opacity-75
-                                                span(style="text-transform:capitalize;", title="custom rarity - " + item.rarity) #{item.rarity}
+                                    .row
+                                        .col-8
+                                            h5.card-title
+                                                a(href='/items/'+item.item_id).text-decoration-none #{item.name}
+                                            case item.rarity
+                                                when '0'
+                                                    .badge.bg-rarity-common.text-white Gewöhnlich
+                                                when '1'
+                                                    .badge.bg-rarity-uncommon.text-black.text-opacity-75  Ungewöhnlich
+                                                when '2'
+                                                    .badge.bg-rarity-rare.text-white.text-opacity-75 Selten
+                                                when '3'
+                                                    .badge.bg-rarity-epic.text-white.text-opacity-75 Episch
+                                                when '4'
+                                                    .badge.bg-rarity-legendary.text-black.text-opacity-75 Legendär
+                                                when '5'
+                                                    .badge.bg-rarity-mythic.text-black.text-opacity-75 Mythisch
+                                                default
+                                                    .badge.bg-rarity-custom.text-black.text-opacity-75
+                                                        span(style="text-transform:capitalize;", title="custom rarity - " + item.rarity) #{item.rarity}
+                                        .col-4.flex-column.d-flex
+                                            if item.button_text
+                                                .text-end.my-auto
+                                                    - var iurl = item.button_url
+                                                    - iurl = iurl.replace('{item_id}', item.item_id)
+                                                    - iurl = iurl.replace('{user_id}', item.user_id)
+                                                    a.btn.btn-outline-primary(href=iurl, target="_blank") #{item.button_text}
                                 if item.description
                                     .card-body
                                         p.card-text

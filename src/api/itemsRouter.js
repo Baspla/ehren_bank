@@ -1,5 +1,4 @@
 import {createItem, deleteItem, getItemInfo, getItemListByApp, updateItem} from "../db/item.js";
-import {validate} from "uuid";
 import express from "express";
 import {appHasPermission} from "./restapi.js";
 import {permissions} from "../util/permissions.js";
@@ -72,8 +71,10 @@ async function providePostItem(req, res) {
             const rarity = req.body.rarity
             const tags = req.body.tags
             const created = new Date().getTime()
+            const buttonText = req.body.buttonText || null
+            const buttonUrl = req.body.buttonUrl || null
             if (validateItem(res, name, description, image, rarity, tags)) {
-                createItem(userId, name, description, image, rarity, tags, created, req.temp.app_id).then(item => {
+                createItem(userId, name, description, image, rarity, tags, created, req.temp.app_id,buttonText,buttonUrl).then(item => {
                     res.status(200).json(item)
                 }).catch(err => {
                     res.status(500).json({error: err.message})
@@ -94,12 +95,14 @@ async function providePatchItem(req, res) {
         } else if (item.app_id === req.temp.app_id) {
             if (req.body.name && req.body.description && req.body.image && req.body.rarity && req.body.tags) {
                 const name = req.body.name
-                const description = req.body.description
-                const image = req.body.image
+                const description = req.body.description || null
+                const image = req.body.image || null
                 const rarity = req.body.rarity
                 const tags = req.body.tags
+                const buttonText = req.body.buttonText || null
+                const buttonUrl = req.body.buttonUrl || null
                 if (validateItem(res, name, description, image, rarity, tags)) {
-                    updateItem(req.params.item_id, name, description, image, rarity, tags).then(item => {
+                    updateItem(req.params.item_id, name, description, image, rarity, tags,buttonText,buttonUrl).then(item => {
                         res.status(200).json(item)
                     }).catch(err => {
                         res.status(500).json({error: err.message})

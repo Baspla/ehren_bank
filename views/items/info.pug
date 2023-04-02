@@ -13,6 +13,12 @@ block content
             if item.image
                 img.card-img-top(src=item.image, alt='Gegenstandsbild', style='height: 250px; object-fit: cover;')
             h5.display-6 #{item.name}
+            if item.button_text
+                .my-3
+                    - var iurl = item.button_url
+                    - iurl = iurl.replace('{item_id}', item.item_id)
+                    - iurl = iurl.replace('{user_id}', item.user_id)
+                    a.btn.btn-outline-primary(href=iurl, target="_blank") #{item.button_text}
             if item.description
                 p #{item.description}
             p Dieses Item gehört #{item.user_displayname}

@@ -7,12 +7,14 @@ export async function setupItems() {
             item_id SERIAL PRIMARY KEY,
             user_id INTEGER NOT NULL,
             name VARCHAR(255) NOT NULL,
-            description VARCHAR(255),
-            image VARCHAR(255),
+            description VARCHAR(512),
+            image VARCHAR(512),
             rarity VARCHAR(255) NOT NULL,
-            tags VARCHAR(255) NOT NULL,
+            tags VARCHAR(512) NOT NULL,
             created TIMESTAMP NOT NULL DEFAULT NOW(),
             app_id INTEGER NOT NULL,
+            button_text VARCHAR(255) NOT NULL,
+            button_url VARCHAR(512) NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
             FOREIGN KEY (app_id) REFERENCES apps(app_id) ON DELETE CASCADE ON UPDATE CASCADE,
             UNIQUE (item_id)
@@ -25,26 +27,30 @@ export function itemExists(itemID) {
     return sql`SELECT EXISTS(SELECT 1 FROM items WHERE item_id = ${itemID})`;
 }
 
-export function createItem(userId, name, description, image, rarity, tags, created, appID) {
+export function createItem(userId, name, description, image, rarity, tags, created, appID, buttonText, buttonURL) {
     name = name.substring(0, 255);
-    description = description.substring(0, 255);
-    image = image.substring(0, 255);
+    description = description.substring(0, 512);
+    if(image!=null) image = image.substring(0, 512);
     rarity = rarity.substring(0, 255);
-    tags = tags.substring(0, 255);
-    return sql`INSERT INTO items (user_id, name, description, image, rarity, tags, created, app_id) VALUES (${userId}, ${name}, ${description}, ${image}, ${rarity}, ${tags}, ${created}, ${appID}) RETURNING item_id`;
+    tags = tags.substring(0, 512);
+    if (buttonText != null) buttonText = buttonText.substring(0, 255);
+    if (buttonURL != null) buttonURL = buttonURL.substring(0, 512);
+    return sql`INSERT INTO items (user_id, name, description, image, rarity, tags, created, app_id, button_text, button_url) VALUES (${userId}, ${name}, ${description}, ${image}, ${rarity}, ${tags}, ${created}, ${appID}, ${buttonText}, ${buttonURL}) RETURNING item_id`;
 }
 
 export function deleteItem(itemID) {
     return sql`DELETE FROM items WHERE item_id = ${itemID}`;
 }
 
-export function updateItem(itemID, name, description, image, rarity, tags) {
+export function updateItem(itemID, name, description, image, rarity, tags, buttonText, buttonURL) {
     name = name.substring(0, 255);
-    description = description.substring(0, 255);
-    image = image.substring(0, 255);
+    description = description.substring(0, 512);
+    if(image!=null) image = image.substring(0, 512);
     rarity = rarity.substring(0, 255);
-    tags = tags.substring(0, 255);
-    return sql`UPDATE items SET name = ${name}, description = ${description}, image = ${image}, rarity = ${rarity}, tags = ${tags}WHERE item_id = ${itemID}`;
+    tags = tags.substring(0, 512);
+    if (buttonText != null) buttonText = buttonText.substring(0, 255);
+    if (buttonURL != null) buttonURL = buttonURL.substring(0, 512);
+    return sql`UPDATE items SET name = ${name}, description = ${description}, image = ${image}, rarity = ${rarity}, tags = ${tags}WHERE item_id = ${itemID}, button_text = ${buttonText}, button_url = ${buttonURL}`;
 }
 
 export function getItemInfo(itemID) {
@@ -88,9 +94,9 @@ export function getItemListByApp(appID) {
 }
 
 export function getItemListByUserAndApp(userID, appID) {
-    return sql`SELECT * FROM items WHERE user_id = ${userID} AND app_id = ${appID}`;
+    return sql`SELECT items.*, apps.name AS app_name FROM items JOIN apps ON items.app_id = apps.app_id WHERE user_id = ${userID} AND items.app_id = ${appID}  ORDER BY created DESC`;
 }
 
 export function getItemListByUserAndRarity(userID, rarity) {
-    return sql`SELECT * FROM items WHERE user_id = ${userID} AND rarity = ${rarity}`;
+    return sql`SELECT items.*, apps.name FROM items JOIN apps ON items.app_id = apps.app_id WHERE user_id = ${userID} AND items.rarity = ${rarity}  ORDER BY created DESC`;
 }

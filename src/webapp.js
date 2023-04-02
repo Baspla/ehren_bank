@@ -26,7 +26,6 @@ import {
 import {
     processShopCoupon,
     processShopKaufen,
-    renderShopInfo,
     renderShopKaufen,
     renderShops
 } from "./controller/shop.js";
@@ -43,7 +42,6 @@ import {renderDebug} from "./controller/debug.js";
 import {renderMakeadmin, processMakeadmin} from "./controller/makeadmin.js";
 import {renderUnknownPage} from "./controller/404.js";
 import {errorHandler, isLoggedIn} from "./util/controller_utils.js";
-import bodyParser from "body-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -173,7 +171,7 @@ function checkIsLoggedIn(req, res, next) {
     if (isLoggedIn(req)) {
         next()
     } else {
-        res.redirect('/login?returnURL=' + encodeURIComponent(req.path))
+        res.redirect('/login?returnURL=' + encodeURIComponent(req.originalUrl))
     }
 }
 

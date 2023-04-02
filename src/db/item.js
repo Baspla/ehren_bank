@@ -35,6 +35,7 @@ export function createItem(userId, name, description, image, rarity, tags, creat
     tags = tags.substring(0, 512);
     if (buttonText != null) buttonText = buttonText.substring(0, 255);
     if (buttonURL != null) buttonURL = buttonURL.substring(0, 512);
+    console.log("createItem: " + userId + ", " + name + ", " + description + ", " + image + ", " + rarity + ", " + tags + ", " + created + ", " + appID + ", " + buttonText + ", " + buttonURL);
     return sql`INSERT INTO items (user_id, name, description, image, rarity, tags, created, app_id, button_text, button_url) VALUES (${userId}, ${name}, ${description}, ${image}, ${rarity}, ${tags}, ${created}, ${appID}, ${buttonText}, ${buttonURL}) RETURNING item_id`;
 }
 
